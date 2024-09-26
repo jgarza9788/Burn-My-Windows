@@ -9,7 +9,7 @@
 //                                 |__/                                                 //
 //////////////////////////////////////////////////////////////////////////////////////////
 
-// SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
+// SPDX-FileCopyrightText: Justin Garza <JGarza9788@gmail.com>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 'use strict';
@@ -40,21 +40,46 @@ export default class Effect {
   constructor() {
     this.shaderFactory = new ShaderFactory(Effect.getNick(), (shader) => {
       // Store uniform locations of newly created shaders.
-      shader._uSeed     = shader.get_uniform_location('uSeed');
+
+      // shader._uAnimation = shader.get_uniform_location('uAnimation');
+
+      shader._uStartPos = shader.get_uniform_location('uStartPos');
+      shader._uAmplitude = shader.get_uniform_location('uAmplitude');
       shader._uColor    = shader.get_uniform_location('uColor');
-      shader._uScale    = shader.get_uniform_location('uScale');
-      shader._uStrength = shader.get_uniform_location('uStrength');
-      shader._uSpeed    = shader.get_uniform_location('uSpeed');
+      shader._uColorSize    = shader.get_uniform_location('uColorSize');
 
       // Write all uniform values at the start of each animation.
       shader.connect('begin-animation', (shader, settings, forOpening, testMode) => {
         // clang-format off
-        shader.set_uniform_float(shader._uSeed,  1, [testMode ? 0 : Math.random()]);
-        shader.set_uniform_float(shader._uColor, 4, utils.parseColor(settings.get_string('glitch-color')));
-        shader.set_uniform_float(shader._uScale, 1, [settings.get_double('glitch-scale')]);
-        shader.set_uniform_float(shader._uStrength, 1, [settings.get_double('glitch-strength')]);
-        shader.set_uniform_float(shader._uSpeed, 1, [settings.get_double('glitch-speed')]);
+
+        if (settings.get_boolean('warp-use-pointer')) {
+          shader._startPointerPos = global.get_pointer();
+          shader._actor           = actor;
+
+        } else {
+          // Else, a random position along the window boundary is used as start position
+          // for the incinerate effect.
+          let startPos = seed[0] > seed[1] ? [seed[0], Math.floor(seed[1] + 0.5)] :
+                                             [Math.floor(seed[0] + 0.5), seed[1]];
+
+          shader.set_uniform_float(shader._uStartPos, 2, startPos);
+
+          shader._startPointerPos = null;
+        }
+
+        // shader.set_uniform_float(shader._uAnimation, 1, [settings.get_double('warp-animation-time')]);
+        shader.set_uniform_float(shader._uAmplitude, 1, [settings.get_double('warp-amplitude-value')]);
+        shader.set_uniform_float(shader._uColor, 3, utils.parseColor(settings.get_string('warp-effect-color')));
+        shader.set_uniform_float(shader._uColorSize, 1, [settings.get_double('warp-color-size')]);
+
         // clang-format on
+      });
+
+      
+
+      // Make sure to drop the reference to the actor.
+      shader.connect('end-animation', (shader) => {
+        shader._actor = null;
       });
     });
   }
@@ -71,13 +96,13 @@ export default class Effect {
   // effect is enabled currently (e.g. '*-enable-effect'), and its animation time
   // (e.g. '*-animation-time').
   static getNick() {
-    return 'glitch';
+    return 'warp';
   }
 
   // This will be shown in the sidebar of the preferences dialog as well as in the
   // drop-down menus where the user can choose the effect.
   static getLabel() {
-    return _('Glitch');
+    return _('Warp');
   }
 
   // -------------------------------------------------------------------- API for prefs.js
@@ -85,11 +110,12 @@ export default class Effect {
   // This is called by the preferences dialog whenever a new effect profile is loaded. It
   // binds all user interface elements to the respective settings keys of the profile.
   static bindPreferences(dialog) {
-    dialog.bindAdjustment('glitch-animation-time');
-    dialog.bindAdjustment('glitch-scale');
-    dialog.bindAdjustment('glitch-speed');
-    dialog.bindAdjustment('glitch-strength');
-    dialog.bindColorButton('glitch-color');
+    dialog.bindAdjustment('warp-enable-effect');
+    dialog.bindAdjustment('warp-animation-time');
+    dialog.bindAdjustment('warp-amplitude-value');
+    dialog.bindColorButton('warp-effect-color');
+    dialog.bindColorButton('warp-color-size');
+    dialog.bindSwitch('warp-use-pointer');
   }
 
   // ---------------------------------------------------------------- API for extension.js

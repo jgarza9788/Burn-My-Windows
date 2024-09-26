@@ -855,6 +855,12 @@ SPDX-License-Identifier: CC0-1.0
       <description>The color size of the warp effect.</description>
     </key>
 
+    <key name="warp-use-pointer" type="b">
+      <default>true</default>
+      <summary>Warp Use Pointer</summary>
+      <description>Use the pointer location for the warp effect.</description>
+    </key>
+
   </schema>
 
 </schemalist>
