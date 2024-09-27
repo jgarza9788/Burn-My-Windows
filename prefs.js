@@ -91,7 +91,7 @@ export default class BurnMyWindowsPreferences extends ExtensionPreferences {
       TVEffect,
       TVGlitch,
       Wisps,
-      Warp
+      Warp,
     ];
 
     // Load all of our resources.
