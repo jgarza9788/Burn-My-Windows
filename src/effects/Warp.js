@@ -49,7 +49,7 @@ export default class Effect {
       shader._uColorSize    = shader.get_uniform_location('uColorSize');
 
       // Write all uniform values at the start of each animation.
-      shader.connect('begin-animation', (shader, settings, forOpening, testMode) => {
+      shader.connect('begin-animation', (shader, settings, forOpening, testMode, actor) => {
         // clang-format off
 
         if (settings.get_boolean('warp-use-pointer')) {
