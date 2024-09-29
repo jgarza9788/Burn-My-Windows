@@ -45,6 +45,7 @@ import TVEffect from './src/effects/TVEffect.js';
 import TVGlitch from './src/effects/TVGlitch.js';
 import Wisps from './src/effects/Wisps.js';
 import Warp from './src/effects/Warp.js';
+import SimpleFade from './src/effects/SimpleFade.js';
 
 import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
@@ -92,6 +93,7 @@ export default class BurnMyWindowsPreferences extends ExtensionPreferences {
       TVGlitch,
       Wisps,
       Warp,
+      SimpleFade,
     ];
 
     // Load all of our resources.
