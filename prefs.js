@@ -95,6 +95,7 @@ export default class BurnMyWindowsPreferences extends ExtensionPreferences {
       Wisps,
     ];
 
+    
     // Load all of our resources.
     this._resources =
       Gio.Resource.load(this.path + '/resources/burn-my-windows.gresource');
@@ -107,6 +108,7 @@ export default class BurnMyWindowsPreferences extends ExtensionPreferences {
     this._builder = new Gtk.Builder();
     this._builder.add_from_resource(`/ui/common/menus.ui`);
     this._builder.add_from_resource(`/ui/${getUIDir()}/prefs.ui`);
+
 
     // Store a reference to the general settings object.
     this._settings = this.getSettings();
@@ -136,6 +138,7 @@ export default class BurnMyWindowsPreferences extends ExtensionPreferences {
     } catch (e) {
       // Maybe the service is masked...
     }
+
 
     let powerProfileRow = this._builder.get_object('profile-power-profile');
     powerProfileRow.set_visible(hasPowerProfiles);
@@ -176,6 +179,7 @@ export default class BurnMyWindowsPreferences extends ExtensionPreferences {
         }
       });
 
+    
     // This is our top-level widget which we will return later.
     this._widget = this._builder.get_object('general-prefs');
 
@@ -277,6 +281,7 @@ export default class BurnMyWindowsPreferences extends ExtensionPreferences {
       }
     });
 
+      
     // Some things can only be done once the widget is shown as we do not have access to
     // the toplevel widget before.
     this._widget.connect('realize', (widget) => {
@@ -424,7 +429,7 @@ GitHub: <a href='https://github.com/sponsors/schneegans'>https://github.com/spon
           this._settings.set_int('last-prefs-version', this.metadata.version)
         });
         group.add_action(changelogAction);
-
+        
         // Add the about dialog.
         const aboutAction = Gio.SimpleAction.new('about', null);
         aboutAction.connect('activate', () => {
