@@ -12,14 +12,14 @@
 // SPDX-FileCopyrightText: Justin Garza JGarza9788@gmail.com
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-"use strict";
+'use strict';
 
-import * as utils from "../utils.js";
+import * as utils from '../utils.js';
 
 // We import the ShaderFactory only in the Shell process as it is not required in the
 // preferences process. The preferences process does not create any shader instances, it
 // only uses the static metadata of the effect.
-const ShaderFactory = await utils.importInShellOnly("./ShaderFactory.js");
+const ShaderFactory = await utils.importInShellOnly('./ShaderFactory.js');
 
 const _ = await utils.importGettext();
 
@@ -39,17 +39,17 @@ export default class Effect {
   constructor() {
     this.shaderFactory = new ShaderFactory(Effect.getNick(), (shader) => {
       // Store uniform locations of newly created shaders.
-      shader._uBlurAmount = shader.get_uniform_location("uBlurAmount");
-      shader._uBlurQuality = shader.get_uniform_location("uBlurQuality");
+      shader._uBlurAmount  = shader.get_uniform_location('uBlurAmount');
+      shader._uBlurQuality = shader.get_uniform_location('uBlurQuality');
 
       // Write all uniform values at the start of each animation.
-      shader.connect("begin-animation", (shader, settings) => {
+      shader.connect('begin-animation', (shader, settings) => {
         shader.set_uniform_float(shader._uBlurAmount, 1, [
-          settings.get_int("focus-blur-ammout"),
+          settings.get_int('focus-blur-ammout'),
         ]);
 
         shader.set_uniform_float(shader._uBlurQuality, 1, [
-          settings.get_int("focus-blur-quality"),
+          settings.get_int('focus-blur-quality'),
         ]);
       });
     });
@@ -68,13 +68,13 @@ export default class Effect {
   // (e.g. '*-animation-time'). Also, the shader file and the settings UI files should be
   // named likes this.
   static getNick() {
-    return "focus";
+    return 'focus';
   }
 
   // This will be shown in the sidebar of the preferences dialog as well as in the
   // drop-down menus where the user can choose the effect.
   static getLabel() {
-    return _("Focus");
+    return _('Focus');
   }
 
   // -------------------------------------------------------------------- API for prefs.js
@@ -95,6 +95,6 @@ export default class Effect {
   // animation. This is useful if the effect requires drawing something beyond the usual
   // bounds of the actor. This only works for GNOME 3.38+.
   static getActorScale(settings, forOpening, actor) {
-    return { x: 1.0, y: 1.0 };
+    return {x: 1.0, y: 1.0};
   }
 }

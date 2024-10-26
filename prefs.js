@@ -71,31 +71,13 @@ export default class BurnMyWindowsPreferences extends ExtensionPreferences {
 
     // New effects must be registered here and in extension.js.
     this._ALL_EFFECTS = [
-      Apparition,
-      BrokenGlass,
-      Doom,
-      EnergizeA,
-      EnergizeB,
-      Fire,
-      Focus,
-      Glide,
-      Glitch,
-      Hexagon,
-      Incinerate,
-      Matrix,
-      PaintBrush,
-      Pixelate,
-      PixelWheel,
-      PixelWipe,
-      Portal,
-      SnapOfDisintegration,
-      TRexAttack,
-      TVEffect,
-      TVGlitch,
-      Wisps,
+      Apparition, BrokenGlass, Doom,       EnergizeA, EnergizeB,  Fire,
+      Focus,      Glide,       Glitch,     Hexagon,   Incinerate, Matrix,
+      PaintBrush, Pixelate,    PixelWheel, PixelWipe, Portal,     SnapOfDisintegration,
+      TRexAttack, TVEffect,    TVGlitch,   Wisps,
     ];
 
-    
+
     // Load all of our resources.
     this._resources =
       Gio.Resource.load(this.path + '/resources/burn-my-windows.gresource');
@@ -179,7 +161,7 @@ export default class BurnMyWindowsPreferences extends ExtensionPreferences {
         }
       });
 
-    
+
     // This is our top-level widget which we will return later.
     this._widget = this._builder.get_object('general-prefs');
 
@@ -281,7 +263,7 @@ export default class BurnMyWindowsPreferences extends ExtensionPreferences {
       }
     });
 
-      
+
     // Some things can only be done once the widget is shown as we do not have access to
     // the toplevel widget before.
     this._widget.connect('realize', (widget) => {
@@ -429,7 +411,7 @@ GitHub: <a href='https://github.com/sponsors/schneegans'>https://github.com/spon
           this._settings.set_int('last-prefs-version', this.metadata.version)
         });
         group.add_action(changelogAction);
-        
+
         // Add the about dialog.
         const aboutAction = Gio.SimpleAction.new('about', null);
         aboutAction.connect('activate', () => {
