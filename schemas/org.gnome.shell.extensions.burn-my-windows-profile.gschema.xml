@@ -841,7 +841,13 @@ SPDX-License-Identifier: CC0-1.0
     <key name="focus-blur-ammout" type="i">
       <default>50</default>
       <summary>Focus Blur Ammout</summary>
-      <description>The Blue Amount before Focusing.</description>
+      <description>The Blur Amount before Focusing.</description>
+    </key>
+
+    <key name="focus-blur-quality" type="i">
+      <default>5</default>
+      <summary>Focus Blur Quality</summary>
+      <description>The Quality of the Blur (Setting this too high may increase GPU load and affect performance)</description>
     </key>
 
   </schema>

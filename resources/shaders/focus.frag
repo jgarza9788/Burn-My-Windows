@@ -42,12 +42,12 @@ float easeInOutSine(float x) {
 }
 
 // A simple blur function
-vec4 blur(vec2 uv, float radius) {
+vec4 blur(vec2 uv, float radius, float samples) {
   vec4 color = vec4(0.0);
 
   const float tau        = 6.28318530718;
   const float directions = 15.0;
-  const float samples    = 5.0;
+  // const float samples    = quality;
 
   for (float d = 0.0; d < tau; d += tau / directions) {
     for (float s = 0.0; s < 1.0; s += 1.0 / samples) {
@@ -62,6 +62,7 @@ vec4 blur(vec2 uv, float radius) {
 
 // The width of the fading effect is loaded from the settings.
 uniform float uBlurAmount;
+uniform float uBlurQuality;
 
 void main() {
 
@@ -74,7 +75,7 @@ void main() {
     float blurAmount = mix(uBlurAmount, 0.0, easedProgressBlur);
 
     // Apply blur
-    vec4 texColor = blur( iTexCoord.st, blurAmount);
+    vec4 texColor = blur( iTexCoord.st, blurAmount, uBlurQuality);
 
     // Control alpha using easedProgressAlpha
     float alpha = easedProgressAlpha;

@@ -40,11 +40,16 @@ export default class Effect {
     this.shaderFactory = new ShaderFactory(Effect.getNick(), (shader) => {
       // Store uniform locations of newly created shaders.
       shader._uBlurAmount = shader.get_uniform_location("uBlurAmount");
+      shader._uBlurQuality = shader.get_uniform_location("uBlurQuality");
 
       // Write all uniform values at the start of each animation.
       shader.connect("begin-animation", (shader, settings) => {
         shader.set_uniform_float(shader._uBlurAmount, 1, [
           settings.get_int("focus-blur-ammout"),
+        ]);
+
+        shader.set_uniform_float(shader._uBlurQuality, 1, [
+          settings.get_int("focus-blur-quality"),
         ]);
       });
     });
@@ -69,7 +74,7 @@ export default class Effect {
   // This will be shown in the sidebar of the preferences dialog as well as in the
   // drop-down menus where the user can choose the effect.
   static getLabel() {
-    return _("Focus Effect");
+    return _("Focus");
   }
 
   // -------------------------------------------------------------------- API for prefs.js
@@ -81,6 +86,7 @@ export default class Effect {
     // on how to bind other types of UI elements.
     dialog.bindAdjustment('focus-animation-time');
     dialog.bindAdjustment('focus-blur-ammout');
+    dialog.bindAdjustment('focus-blur-quality');
   }
 
   // ---------------------------------------------------------------- API for extension.js
