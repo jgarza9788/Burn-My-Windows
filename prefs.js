@@ -272,7 +272,8 @@ export default class BurnMyWindowsPreferences extends ExtensionPreferences {
           row.set_title(effect.getLabel());
         }
 
-        row.name = effect.getLabel() + effect?.description !== undefined ? effect?.description : "" ;
+        //this is the fix for the merge issue when an effect doesn't have a discription
+        row.name = effect.getLabel() + effect?.description ?? "" ;
 
         // Un-expand any previously expanded effect row. This way we ensure that there
         // is only one expanded row at any time.
