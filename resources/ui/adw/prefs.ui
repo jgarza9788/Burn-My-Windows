@@ -216,9 +216,6 @@ SPDX-License-Identifier: GPL-3.0-or-later
     </child>
   </object>
 
-
-
-
   <object class="AdwPreferencesPage" id="general-prefs">
     <property name="margin-top">20</property>
     <property name="margin-bottom">20</property>
@@ -252,19 +249,23 @@ SPDX-License-Identifier: GPL-3.0-or-later
               <layout>
                 <property name="column">0</property>
                 <property name="row">1</property>
-                <property name="column-span">5</property>
+                <property name="column-span">8</property>
               </layout>
             </object>
           </child>
 
           
           <!-- maybe later add a way to only show enabled|disabled|both -->
+
           <!-- <child>
             <object class="GtkBox">
               <property name="orientation">horizontal</property>
+              <property name="hexpand">true</property>
+              <property name="homogeneous">true</property>
               <layout>
-                <property name="column">5</property>
-                <property name="row">1</property>
+                <property name="column">0</property>
+                <property name="row">2</property>
+                <property name="column-span">3</property>
               </layout>
 
               <style>
@@ -272,25 +273,26 @@ SPDX-License-Identifier: GPL-3.0-or-later
               </style>
 
               <child>
-                <object class="GtkButton" id="filter-enabled">
-                  <property name="label" translatable="yes">enabled</property>
-                </object>
-              </child>
-    
-              <child>
-                <object class="GtkButton" id="filter-disabled">
-                  <property name="label" translatable="yes">disabled</property>
+                <object class="GtkButton" id="show-enabled-effects-button">
+                  <property name="label" translatable="yes">Show Enabled</property>
                 </object>
               </child>
 
               <child>
-                <object class="GtkButton" id="filter-all">
-                  <property name="label" translatable="yes">both</property>
+                <object class="GtkButton" id="show-disabled-effects-button">
+                  <property name="label" translatable="yes">Show Disable</property>
+                </object>
+              </child>
+
+              <child>
+                <object class="GtkButton" id="show-all-effects-button">
+                  <property name="label" translatable="yes">Show All</property>
                 </object>
               </child>
 
             </object>
           </child> -->
+
 
           <child>
             <object class="GtkBox">
@@ -298,9 +300,9 @@ SPDX-License-Identifier: GPL-3.0-or-later
               <property name="hexpand">true</property>
               <property name="homogeneous">true</property>
               <layout>
-                <property name="column">5</property>
+                <property name="column">8</property>
                 <property name="row">1</property>
-                <property name="column-span">4</property>
+                <property name="column-span">2</property>
               </layout>
 
               <style>

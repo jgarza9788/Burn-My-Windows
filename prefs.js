@@ -176,6 +176,47 @@ export default class BurnMyWindowsPreferences extends ExtensionPreferences {
     // This is our top-level widget which we will return later.
     this._widget = this._builder.get_object('general-prefs');
 
+    //filter buttons
+    /*
+    this._builder.get_object('show-enabled-effects-button').connect('clicked', () => {
+      this._effectRows.forEach(effectrow => {
+        let enabled = this.getProfileSettings().get_boolean(`${effectrow.nick}-enable-effect`); 
+        if (enabled)
+        {
+          effectrow.show();
+        }
+        else
+        {
+          effectrow.hide();
+        }
+
+      });
+
+    });
+
+
+    this._builder.get_object('show-disabled-effects-button').connect('clicked', () => {
+      this._effectRows.forEach(effectrow => {
+        let enabled = this.getProfileSettings().get_boolean(`${effectrow.nick}-enable-effect`); 
+        if (enabled)
+        {
+          effectrow.hide();
+        }
+        else
+        {
+          effectrow.show();
+        }
+
+      });
+    });
+
+    this._builder.get_object('show-all-effects-button').connect('clicked', () => {
+      this._effectRows.forEach(effectrow => {
+        effectrow.show();
+      });
+    });
+    */
+
     // Add the functionality to the choose-all and choose-none buttons.
     this._builder.get_object('choose-all-effects-button').connect('clicked', () => {
       this._ALL_EFFECTS.forEach(effect => {
@@ -274,7 +315,8 @@ export default class BurnMyWindowsPreferences extends ExtensionPreferences {
 
         //this is the fix for the merge issue when an effect doesn't have a discription
         row.name = effect.getLabel() + effect?.description ?? "" ;
-
+        row.nick = effect.getNick();
+        
         // Un-expand any previously expanded effect row. This way we ensure that there
         // is only one expanded row at any time.
         if (hasPrefs) {
