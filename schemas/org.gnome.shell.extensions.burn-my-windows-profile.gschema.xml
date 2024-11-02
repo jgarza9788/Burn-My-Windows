@@ -850,6 +850,35 @@ SPDX-License-Identifier: CC0-1.0
       <description>The Quality of the Blur (Setting this too high may increase GPU load and affect performance)</description>
     </key>
 
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <!-- Simple Fade Effect Options                                                    -->
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <key name="simple-fade-enable-effect" type="b">
+    <default>false</default>
+    <summary>Simple Fade Enable Effect</summary>
+    <description>Use the Simple Fade effect.</description>
+  </key>
+
+  <key name="simple-fade-animation-time" type="i">
+    <default>1500</default>
+    <summary>Simple Fade Animation Time</summary>
+    <description>The time the Simple Fade effect takes.</description>
+  </key>
+
+  <key name="simple-fade-min-size" type="d">
+    <default>0.1</default>
+    <summary>Simple Fade Width</summary>
+    <description>Width of the fading effect.</description>
+  </key>
+
+  <key name="simple-fade-strength" type="d">
+    <default>0.1</default>
+    <summary>Simple Fade Width</summary>
+    <description>Width of the fading effect.</description>
+  </key>
+  
   </schema>
 
 </schemalist>

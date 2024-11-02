@@ -46,6 +46,7 @@ import TVEffect from './src/effects/TVEffect.js';
 import TVGlitch from './src/effects/TVGlitch.js';
 import Wisps from './src/effects/Wisps.js';
 
+import SimpleFade from './src/effects/SimpleFade.js';
 
 import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
@@ -74,7 +75,7 @@ export default class BurnMyWindowsPreferences extends ExtensionPreferences {
       Apparition, BrokenGlass, Doom,       EnergizeA, EnergizeB,  Fire,
       Focus,      Glide,       Glitch,     Hexagon,   Incinerate, Matrix,
       PaintBrush, Pixelate,    PixelWheel, PixelWipe, Portal,     SnapOfDisintegration,
-      TRexAttack, TVEffect,    TVGlitch,   Wisps,
+      TRexAttack, TVEffect,    TVGlitch,   Wisps,     SimpleFade,
     ];
 
 

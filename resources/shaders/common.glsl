@@ -42,9 +42,7 @@ uniform float uDuration;
 
 #if defined(KWIN)  // --------------------------------------------------------------------
 
-#if defined(PLASMA6)
 #include "colormanagement.glsl"
-#endif
 
 uniform sampler2D sampler;
 uniform int textureWidth;
@@ -78,18 +76,11 @@ void setOutputColor(vec4 outColor) {
   }
 
   fragColor = vec4(outColor.rgb * outColor.a, outColor.a);
-
-#if defined(PLASMA6)
   fragColor = sourceEncodingToNitsInDestinationColorspace(fragColor);
   fragColor = nitsToDestinationEncoding(fragColor);
-#endif
 }
 
 #elif defined(KWIN_LEGACY)  // -----------------------------------------------------------
-
-#if defined(PLASMA6)
-#include "colormanagement.glsl"
-#endif
 
 uniform sampler2D sampler;
 uniform int textureWidth;
@@ -121,11 +112,6 @@ void setOutputColor(vec4 outColor) {
   }
 
   gl_FragColor = vec4(outColor.rgb * outColor.a, outColor.a);
-
-#if defined(PLASMA6)
-  fragColor = sourceEncodingToNitsInDestinationColorspace(fragColor);
-  fragColor = nitsToDestinationEncoding(fragColor);
-#endif
 }
 
 #else  // GNOME --------------------------------------------------------------------------
@@ -201,6 +187,107 @@ float easeOutBack(float x, float e) {
   float p = x - 1.0;
   return p * p * ((e + 1.0) * p + e) + 1.0;
 }
+
+
+// https://easings.net/
+
+// Quadratic Easing
+/*
+float easeInQuad(float t) {
+    return t * t;
+}
+*/
+
+/*
+float easeOutQuad(float t) {
+    return t * (2.0 - t);
+}
+*/
+
+float easeInOutQuad(float t) {
+    return t < 0.5 ? 2.0 * t * t : -1.0 + (4.0 - 2.0 * t) * t;
+}
+
+// Cubic Easing
+float easeInCubic(float t) {
+    return t * t * t;
+}
+
+float easeOutCubic(float t) {
+    float f = t - 1.0;
+    return f * f * f + 1.0;
+}
+
+float easeInOutCubic(float t) {
+    return t < 0.5 ? 4.0 * t * t * t : (t - 1.0) * (2.0 * t - 2.0) * (2.0 * t - 2.0) + 1.0;
+}
+
+// Quartic Easing
+float easeInQuart(float t) {
+    return t * t * t * t;
+}
+
+float easeOutQuart(float t) {
+    float f = t - 1.0;
+    return 1.0 - f * f * f * f;
+}
+
+float easeInOutQuart(float t) {
+    return t < 0.5 ? 8.0 * t * t * t * t : 1.0 - 8.0 * (t - 1.0) * (t - 1.0) * (t - 1.0) * (t - 1.0);
+}
+
+// Sine Easing
+float easeInSine(float t) {
+    return 1.0 - cos((t * 3.141592653589793) / 2.0);
+}
+
+float easeOutSine(float t) {
+    return sin((t * 3.141592653589793) / 2.0);
+}
+
+float easeInOutSine(float t) {
+    return -0.5 * (cos(3.141592653589793 * t) - 1.0);
+}
+
+// Exponential Easing
+float easeInExpo(float t) {
+    return t == 0.0 ? 0.0 : pow(2.0, 10.0 * (t - 1.0));
+}
+
+float easeOutExpo(float t) {
+    return t == 1.0 ? 1.0 : 1.0 - pow(2.0, -10.0 * t);
+}
+
+float easeInOutExpo(float t) {
+    if (t == 0.0) return 0.0;
+    if (t == 1.0) return 1.0;
+    return t < 0.5 ? 0.5 * pow(2.0, 20.0 * t - 10.0) : 1.0 - 0.5 * pow(2.0, -20.0 * t + 10.0);
+}
+
+// Back Easing
+/*
+float easeInBack(float t) {
+    const float c1 = 1.70158;
+    return (c1 + 1.0) * t * t * t - c1 * t * t;
+}
+*/
+
+/*
+float easeOutBack(float t) {
+    const float c1 = 1.70158;
+    float f = t - 1.0;
+    return 1.0 + (c1 + 1.0) * f * f * f + c1 * f * f;
+}
+*/
+
+float easeInOutBack(float t) {
+    const float c1 = 1.70158;
+    const float c2 = c1 * 1.525;
+    return t < 0.5
+        ? (pow(2.0 * t, 2.0) * ((c2 + 1.0) * 2.0 * t - c2)) / 2.0
+        : (pow(2.0 * t - 2.0, 2.0) * ((c2 + 1.0) * (t * 2.0 - 2.0) + c2) + 2.0) / 2.0;
+}
+
 
 // --------------------------------------------------------------------- edge mask helpers
 

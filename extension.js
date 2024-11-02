@@ -46,6 +46,8 @@ import TVGlitch from './src/effects/TVGlitch.js';
 import Wisps from './src/effects/Wisps.js';
 
 
+import SimpleFade from './src/effects/SimpleFade.js';
+
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {Workspace} from 'resource:///org/gnome/shell/ui/workspace.js';
 import {WindowPreview} from 'resource:///org/gnome/shell/ui/windowPreview.js';
@@ -79,6 +81,8 @@ export default class BurnMyWindows extends Extension {
       new PixelWipe(),  new Portal(),      new SnapOfDisintegration(),
       new TRexAttack(), new TVEffect(),    new TVGlitch(),
       new Wisps(),
+
+      new SimpleFade(),
     ];
 
     // Load all of our resources.
