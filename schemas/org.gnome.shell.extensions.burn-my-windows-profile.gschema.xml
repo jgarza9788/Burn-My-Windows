@@ -850,6 +850,125 @@ SPDX-License-Identifier: CC0-1.0
       <description>The Quality of the Blur (Setting this too high may increase GPU load and affect performance)</description>
     </key>
 
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- Mushroom Effect Options                                                    -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <key name="mushroom-enable-effect" type="b">
+      <default>false</default>
+      <summary>mushroom Enable Effect</summary>
+      <description>Use the mushroom effect.</description>
+    </key>
+
+    <key name="mushroom-animation-time" type="i">
+      <default>1500</default>
+      <summary>mushroom Animation Time</summary>
+      <description>The time the mushroom effect takes.</description>
+    </key>
+
+    <key name="mushroom-8bit-enable" type="b">
+      <default>true</default>
+      <summary>mushroom 8Bit Animation</summary>
+      <description>use the old style.</description>
+    </key>
+
+    <key name="mushroom-4pstars-enable" type="b">
+      <default>true</default>
+      <summary>mushroom 8Bit Animation</summary>
+      <description>use the old style.</description>
+    </key>
+    
+    <key name="mushroom-4pstars-count" type="i">
+      <default>4</default>
+      <summary>mushroom Animation Time</summary>
+      <description>The time the mushroom effect takes.</description>
+    </key>
+
+    <key name="mushroom-4pstars-color" type="s">
+      <default>"rgba(76, 51, 25, 0.0)"</default>
+      <summary>Fire Color 1</summary>
+      <description>The first color of the fire gradient.</description>
+    </key>
+
+    <key name="mushroom-4pstars-rotation" type="d">
+      <default>0.33</default>
+      <summary>Glide Scale</summary>
+      <description>The scale of the window.</description>
+    </key>
+
+    <key name="mushroom-rays-enable" type="b">
+      <default>true</default>
+      <summary>mushroom 8Bit Animation</summary>
+      <description>use the old style.</description>
+    </key>
+
+    <key name="mushroom-rays-color" type="s">
+      <default>"rgba(76, 51, 25, 0.0)"</default>
+      <summary>Fire Color 1</summary>
+      <description>The first color of the fire gradient.</description>
+    </key>
+
+    <key name="mushroom-5pstars-enable" type="b">
+      <default>true</default>
+      <summary>mushroom 8Bit Animation</summary>
+      <description>use the old style.</description>
+    </key>
+
+    <key name="mushroom-5pstarring-count" type="i">
+      <default>4</default>
+      <summary>mushroom Animation Time</summary>
+      <description>The time the mushroom effect takes.</description>
+    </key>
+
+    <key name="mushroom-5pstarring-rotation" type="d">
+      <default>0.33</default>
+      <summary>Glide Scale</summary>
+      <description>The scale of the window.</description>
+    </key>
+
+    <key name="mushroom-5pstars-count" type="i">
+      <default>4</default>
+      <summary>mushroom Animation Time</summary>
+      <description>The time the mushroom effect takes.</description>
+    </key>
+
+    <key name="star-color-0" type="s">
+      <default>"rgba(76, 51, 25, 0.0)"</default>
+      <summary>Fire Color 1</summary>
+      <description>The first color of the fire gradient.</description>
+    </key>
+
+    <key name="star-color-1" type="s">
+      <default>"rgba(76, 51, 25, 0.0)"</default>
+      <summary>Fire Color 1</summary>
+      <description>The first color of the fire gradient.</description>
+    </key>
+
+    <key name="star-color-2" type="s">
+      <default>"rgba(76, 51, 25, 0.0)"</default>
+      <summary>Fire Color 1</summary>
+      <description>The first color of the fire gradient.</description>
+    </key>
+
+    <key name="star-color-3" type="s">
+      <default>"rgba(76, 51, 25, 0.0)"</default>
+      <summary>Fire Color 1</summary>
+      <description>The first color of the fire gradient.</description>
+    </key>
+
+    <key name="star-color-4" type="s">
+      <default>"rgba(76, 51, 25, 0.0)"</default>
+      <summary>Fire Color 1</summary>
+      <description>The first color of the fire gradient.</description>
+    </key>
+
+    <key name="star-color-5" type="s">
+      <default>"rgba(76, 51, 25, 0.0)"</default>
+      <summary>Fire Color 1</summary>
+      <description>The first color of the fire gradient.</description>
+    </key>
+
+
   </schema>
 
 </schemalist>
