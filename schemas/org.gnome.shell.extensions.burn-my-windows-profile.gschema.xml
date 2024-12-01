@@ -874,98 +874,98 @@ SPDX-License-Identifier: CC0-1.0
 
     <key name="mushroom-4pstars-enable" type="b">
       <default>true</default>
-      <summary>mushroom 8Bit Animation</summary>
-      <description>use the old style.</description>
+      <summary>Enable the 4Pointed Stars</summary>
+      <description>Enable the 4Pointed Stars</description>
     </key>
     
     <key name="mushroom-4pstars-count" type="i">
       <default>4</default>
-      <summary>mushroom Animation Time</summary>
-      <description>The time the mushroom effect takes.</description>
+      <summary>The Number of 4Pointed Stars</summary>
+      <description>The Number of 4Pointed Stars</description>
     </key>
 
     <key name="mushroom-4pstars-color" type="s">
-      <default>"rgba(76, 51, 25, 0.0)"</default>
-      <summary>Fire Color 1</summary>
-      <description>The first color of the fire gradient.</description>
+      <default>"rgba(255, 255, 255, 1.0)"</default>
+      <summary>The 4Pointed Star Color</summary>
+      <description>The 4Pointed Star Color</description>
     </key>
 
     <key name="mushroom-4pstars-rotation" type="d">
-      <default>0.33</default>
-      <summary>Glide Scale</summary>
-      <description>The scale of the window.</description>
+      <default>0.3</default>
+      <summary>The Number of Rotations the 4Pointed Stars do</summary>
+      <description>The Number of Rotations the 4Pointed Stars do</description>
     </key>
 
     <key name="mushroom-rays-enable" type="b">
       <default>true</default>
-      <summary>mushroom 8Bit Animation</summary>
+      <summary>Enable the Rays</summary>
       <description>use the old style.</description>
     </key>
 
     <key name="mushroom-rays-color" type="s">
-      <default>"rgba(76, 51, 25, 0.0)"</default>
-      <summary>Fire Color 1</summary>
-      <description>The first color of the fire gradient.</description>
+      <default>"rgba(255, 255, 255, 1.0)"</default>
+      <summary>The Rays Color</summary>
+      <description>The Rays Color</description>
     </key>
 
     <key name="mushroom-5pstars-enable" type="b">
       <default>true</default>
-      <summary>mushroom 8Bit Animation</summary>
-      <description>use the old style.</description>
+      <summary>Enable the 5 Pointed Stars</summary>
+      <description>Enable the 5 Pointed Stars</description>
     </key>
 
     <key name="mushroom-5pstarring-count" type="i">
-      <default>4</default>
-      <summary>mushroom Animation Time</summary>
-      <description>The time the mushroom effect takes.</description>
+      <default>3</default>
+      <summary>Number of Rings of 5Pointed Stars</summary>
+      <description>Number of Rings of 5 Pointed Stars</description>
     </key>
 
     <key name="mushroom-5pstarring-rotation" type="d">
-      <default>0.33</default>
-      <summary>Glide Scale</summary>
-      <description>The scale of the window.</description>
+      <default>1.33</default>
+      <summary>The Number of Rotations/Cycles the 5Pointed Stars do</summary>
+      <description>The Number of Rotations/Cycles the 5Pointed Stars do</description>
     </key>
 
     <key name="mushroom-5pstars-count" type="i">
-      <default>4</default>
-      <summary>mushroom Animation Time</summary>
-      <description>The time the mushroom effect takes.</description>
+      <default>5</default>
+      <summary>The Number of 5Pointed Stars in each Ring</summary>
+      <description>The Number of 5Pointed Stars in each Ring</description>
     </key>
 
-    <key name="star-color-0" type="s">
-      <default>"rgba(76, 51, 25, 0.0)"</default>
-      <summary>Fire Color 1</summary>
-      <description>The first color of the fire gradient.</description>
+    <key name="mushroom-star-color-0" type="s">
+      <default>"rgba(233, 249, 1, 1.0)"</default>
+      <summary>Star Color 1</summary>
+      <description>The Nth color of the Star gradient.</description>
     </key>
 
-    <key name="star-color-1" type="s">
-      <default>"rgba(76, 51, 25, 0.0)"</default>
-      <summary>Fire Color 1</summary>
-      <description>The first color of the fire gradient.</description>
+    <key name="mushroom-star-color-1" type="s">
+      <default>"rgba(233, 249, 1, 1.0)"</default>
+      <summary>Star Color 1</summary>
+      <description>The Nth color of the Star gradient.</description>
     </key>
 
-    <key name="star-color-2" type="s">
-      <default>"rgba(76, 51, 25, 0.0)"</default>
-      <summary>Fire Color 1</summary>
-      <description>The first color of the fire gradient.</description>
+    <key name="mushroom-star-color-2" type="s">
+      <default>"rgba(91, 255, 1, 1.0)"</default>
+      <summary>Star Color 1</summary>
+      <description>The Nth color of the Star gradient.</description>
     </key>
 
-    <key name="star-color-3" type="s">
-      <default>"rgba(76, 51, 25, 0.0)"</default>
-      <summary>Fire Color 1</summary>
-      <description>The first color of the fire gradient.</description>
+    <key name="mushroom-star-color-3" type="s">
+      <default>"rgba(91, 255, 1, 1.0)"</default>
+      <summary>Star Color 1</summary>
+      <description>The Nth color of the Star gradient.</description>
     </key>
 
-    <key name="star-color-4" type="s">
-      <default>"rgba(76, 51, 25, 0.0)"</default>
-      <summary>Fire Color 1</summary>
-      <description>The first color of the fire gradient.</description>
+    <key name="mushroom-star-color-4" type="s">
+      <default>"rgba(0, 240, 236, 1.0)"</default>
+      <summary>Star Color 1</summary>
+      <description>The Nth color of the Star gradient.</description>
     </key>
 
-    <key name="star-color-5" type="s">
-      <default>"rgba(76, 51, 25, 0.0)"</default>
-      <summary>Fire Color 1</summary>
-      <description>The first color of the fire gradient.</description>
+    <key name="mushroom-star-color-5" type="s">
+      <default>"rgba(0, 240, 236, 1.0)"</default>
+      <summary>Star Color 1</summary>
+      <description>The Nth color of the Star gradient.</description>
     </key>
 
 

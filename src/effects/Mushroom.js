@@ -14,6 +14,8 @@
 
 'use strict';
 
+import Gio from 'gi://Gio';
+
 import * as utils from '../utils.js';
 
 // We import the ShaderFactory only in the Shell process as it is not required in the
@@ -66,10 +68,10 @@ export default class Effect {
 
       // And update all uniforms at the start of each animation.
       shader.connect('begin-animation', (shader, settings) => {
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i <= 5; i++) {
           shader.set_uniform_float(
-            shader._uGradient[i - 1], 4,
-            utils.parseColor(settings.get_string('star-color-' + i)));
+            shader._uGradient[i], 4,
+            utils.parseColor(settings.get_string('mushroom-star-color-' + i)));
         }
 
         // clang-format off
@@ -77,11 +79,11 @@ export default class Effect {
 
         shader.set_uniform_float(shader._uEnable4PStars,        1, [settings.get_boolean('mushroom-4pstars-enable')]);
         shader.set_uniform_float(shader._u4PStars,              1, [settings.get_int('mushroom-4pstars-count')]);
-        shader.set_uniform_float(shader._u4PSColor,             3, utils.parseColor(settings.get_string('mushroom-4pstars-color')));
+        shader.set_uniform_float(shader._u4PSColor,             4, utils.parseColor(settings.get_string('mushroom-4pstars-color')));
         shader.set_uniform_float(shader._u4PSRotation,          1, [settings.get_double('mushroom-4pstars-rotation')]);
 
         shader.set_uniform_float(shader._uEnableRays,           1, [settings.get_boolean('mushroom-rays-enable')]);
-        shader.set_uniform_float(shader._uRaysColor,            3, utils.parseColor(settings.get_string('mushroom-rays-color')));
+        shader.set_uniform_float(shader._uRaysColor,            4, utils.parseColor(settings.get_string('mushroom-rays-color')));
 
         shader.set_uniform_float(shader._uEnable5pStars,        1, [settings.get_boolean('mushroom-5pstars-enable')]);
         shader.set_uniform_float(shader._uRings,                1, [settings.get_int('mushroom-5pstarring-count')]);
@@ -123,26 +125,86 @@ export default class Effect {
   static bindPreferences(dialog) {
     // Empty for now... Code is added here later in the tutorial!
     dialog.bindAdjustment('mushroom-animation-time');
-    dialog.bindAdjustment('mushroom-8bit-enable');
+    dialog.bindSwitch('mushroom-8bit-enable');
 
-    dialog.bindAdjustment('star-color-0');
-    dialog.bindAdjustment('star-color-1');
-    dialog.bindAdjustment('star-color-2');
-    dialog.bindAdjustment('star-color-3');
-    dialog.bindAdjustment('star-color-4');
-    dialog.bindAdjustment('star-color-5');
-    dialog.bindAdjustment('mushroom-4pstars-enable');
+    dialog.bindColorButton('mushroom-star-color-0');
+    dialog.bindColorButton('mushroom-star-color-1');
+    dialog.bindColorButton('mushroom-star-color-2');
+    dialog.bindColorButton('mushroom-star-color-3');
+    dialog.bindColorButton('mushroom-star-color-4');
+    dialog.bindColorButton('mushroom-star-color-5');
+    // dialog.bindColorButton('star-color-6');
+    dialog.bindSwitch('mushroom-4pstars-enable');
     dialog.bindAdjustment('mushroom-4pstars-count');
-    dialog.bindAdjustment('mushroom-4pstars-color');
+    dialog.bindColorButton('mushroom-4pstars-color');
     dialog.bindAdjustment('mushroom-4pstars-rotation');
 
-    dialog.bindAdjustment('mushroom-rays-enable');
-    dialog.bindAdjustment('mushroom-rays-color');
+    dialog.bindSwitch('mushroom-rays-enable');
+    dialog.bindColorButton('mushroom-rays-color');
 
-    dialog.bindAdjustment('mushroom-5pstars-enable');
+    dialog.bindSwitch('mushroom-5pstars-enable');
     dialog.bindAdjustment('mushroom-5pstarring-count');
     dialog.bindAdjustment('mushroom-5pstarring-rotation');
     dialog.bindAdjustment('mushroom-5pstars-count');
+
+
+    // Connect the buttons only once. The bindPreferences can be called multiple times...
+    if (!Effect._isConnected) {
+      Effect._isConnected = true;
+
+      // The star-gradient-reset button needs to be bound explicitly.
+      dialog.getBuilder().get_object('reset-star-colors').connect('clicked', () => {
+        dialog.getProfileSettings().reset('mushroom-star-color-0');
+        dialog.getProfileSettings().reset('mushroom-star-color-1');
+        dialog.getProfileSettings().reset('mushroom-star-color-2');
+        dialog.getProfileSettings().reset('mushroom-star-color-3');
+        dialog.getProfileSettings().reset('mushroom-star-color-4');
+        dialog.getProfileSettings().reset('mushroom-star-color-5');
+      });
+
+      Effect._createMushroomPresets(dialog);
+
+      // enables and disables prefs
+      function updateSensitivity(dialog, state) {
+        const ids = [
+          'mushroom-4pstars-enable', 'mushroom-4pstars-count-scale',
+          'mushroom-4pstars-color', 'mushroom-4pstars-rotation-scale',
+          'mushroom-rays-enable', 'mushroom-rays-color', 'mushroom-5pstars-enable',
+          'mushroom-5pstarring-count-scale', 'mushroom-5pstarring-enable',
+          'mushroom-5pstarring-rotation-scale', 'mushroom-5pstars-count-scale',
+          'mushroom-star-color-0', 'mushroom-star-color-1', 'mushroom-star-color-2',
+          'mushroom-star-color-3', 'mushroom-star-color-4', 'mushroom-star-color-5',
+          'mushroom-star-color-preset-button'
+        ];
+
+        ids.forEach(id => {
+          const obj = dialog.getBuilder().get_object(id);
+
+          if (obj && typeof obj.set_sensitive === 'function') {
+            obj.set_sensitive(!state);  // Disable if state is ON, enable if OFF
+          } else {
+            log(`Warning: Object with ID '${
+              id}' does not support set_sensitive or is null.`);
+          }
+        });
+      }
+
+      // Connect the state-set signal to 8BitSwitch
+      const switchWidget = dialog.getBuilder().get_object('mushroom-8bit-enable');
+      if (switchWidget) {
+        switchWidget.connect('state-set', (widget, state) => {
+          updateSensitivity(dialog,
+                            state);  // Call the function when the signal is triggered
+        });
+
+        // Call the function manually on startup, based on the initial state of the switch
+        const initialState =
+          switchWidget.get_active();  // Get the initial state of the switch
+        updateSensitivity(dialog, initialState);
+      } else {
+        log('Error: \'mushroom-8bit-enable\' switch widget not found.');
+      }
+    }
   }
 
   // ---------------------------------------------------------------- API for extension.js
@@ -152,5 +214,98 @@ export default class Effect {
   // bounds of the actor. This only works for GNOME 3.38+.
   static getActorScale(settings, forOpening, actor) {
     return {x: 1.0, y: 1.0};
+  }
+
+  // ---------------------------------------------------------------- Presets
+
+  // This populates the preset dropdown menu for the fire options.
+  static _createMushroomPresets(dialog) {
+    dialog.getBuilder()
+      .get_object('mushroom-star-color-preset-button')
+      .connect('realize', (widget) => {
+        const presets = [
+          {
+            name: _('Default Colors'),
+            color0: 'rgba(233,249,0,1.0)',
+            color1: 'rgba(233,249,0,1.0)',
+            color2: 'rgba(91,255,0,1.0)',
+            color3: 'rgba(91,255,0,1.0)',
+            color4: 'rgba(0,240,236,1.0)',
+            color5: 'rgba(0,240,236,1.0)',
+          },
+          {
+            name: _('Red White and Blue'),
+            color0: 'rgba(255, 0, 0, 1.0)',
+            color1: 'rgba(255, 0, 0, 1.0)',
+            color2: 'rgba(255,255,255, 1.0)',
+            color3: 'rgba(255,255,255, 1.0)',
+            color4: 'rgba(0,0,255, 1.0)',
+            color5: 'rgba(0,0,255, 1.0)'
+          },
+          {
+            name: _('Rainbow'),
+            color0: 'rgba(255, 69, 58, 1.0)',   // Bold Red
+            color1: 'rgba(255, 140, 0, 1.0)',   // Bold Orange
+            color2: 'rgba(255, 223, 0, 1.0)',   // Bold Yellow
+            color3: 'rgba(50, 205, 50, 1.0)',   // Bold Green
+            color4: 'rgba(30, 144, 255, 1.0)',  // Bold Blue
+            color5: 'rgba(148, 0, 211, 1.0)'    // Bold Purple
+          },
+          {
+            name: _('Cattuccino Colors'),
+            color0: 'rgba(239, 146, 160, 1.0)',
+            color1: 'rgba(246, 178, 138, 1.0)',
+            color2: 'rgba(240, 217, 169, 1.0)',
+            color3: 'rgba(175, 223, 159, 1.0)',
+            color4: 'rgba(149, 182, 246, 1.0)',
+            color5: 'rgba(205, 170, 247, 1.0)'
+          },
+          {
+            name: _('Dracula Colors'),
+            color0: 'rgba(40, 42, 54, 1.0)',   // Red
+            color1: 'rgba(68, 71, 90, 1.0)',   // Orange
+            color2: 'rgba(90, 94, 119, 1.0)',  // Yellow
+            color3: 'rgba(90, 94, 119, 1.0)',  // Green
+            color4: 'rgba(68, 71, 90, 1.0)',   // Purple
+            color5: 'rgba(40, 42, 54, 1.0)'    // Cyan
+          }
+        ];
+
+        const menu      = Gio.Menu.new();
+        const group     = Gio.SimpleActionGroup.new();
+        const groupName = 'presets';
+
+        // Add all presets.
+        presets.forEach((preset, i) => {
+          const actionName = 'mushroom' + i;
+          menu.append(preset.name, groupName + '.' + actionName);
+          let action = Gio.SimpleAction.new(actionName, null);
+
+          // Load the preset on activation.
+          action.connect('activate', () => {
+            dialog.getProfileSettings().set_string('mushroom-star-color-0',
+                                                   preset.color0);
+            dialog.getProfileSettings().set_string('mushroom-star-color-1',
+                                                   preset.color1);
+            dialog.getProfileSettings().set_string('mushroom-star-color-2',
+                                                   preset.color2);
+            dialog.getProfileSettings().set_string('mushroom-star-color-3',
+                                                   preset.color3);
+            dialog.getProfileSettings().set_string('mushroom-star-color-4',
+                                                   preset.color4);
+            dialog.getProfileSettings().set_string('mushroom-star-color-5',
+                                                   preset.color5);
+          });
+
+          group.add_action(action);
+        });
+
+        dialog.getBuilder()
+          .get_object('mushroom-star-color-preset-button')
+          .set_menu_model(menu);
+
+        const root = widget.get_root();
+        root.insert_action_group(groupName, group);
+      });
   }
 }

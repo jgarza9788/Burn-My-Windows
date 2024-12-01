@@ -35,7 +35,7 @@
 uniform bool u8BitStyle;
 
 uniform bool uEnable4PStars;
-uniform int u4PStars;
+uniform float u4PStars;
 uniform vec4 u4PSColor;
 uniform float u4PSRotation;
 
@@ -43,9 +43,9 @@ uniform bool uEnableRays;
 uniform vec4 uRaysColor;
 
 uniform bool uEnable5pStars;
-uniform int uRings;
+uniform float uRings;
 uniform float uRingRotation;
-uniform int uStarPerRing;
+uniform float uStarPerRing;
 
 uniform vec4 uStarColor0;
 uniform vec4 uStarColor1;
@@ -66,9 +66,11 @@ float getStar(vec2 uv, vec2 center, float npoints, float radiusRatio, float size
     float radiusMax = 1.0;
     float radiusMin = radiusMax * radiusRatio;
 
-
     float PI = 3.1415926;
     float starangle = 2.0 * PI / npoints; // Angle between points on the star
+
+    // Offset rotation to ensure one point is always up when rotation = 0
+    rotation += PI / 2.0 - starangle / 1.0;
 
     // Define the positions for the outer and inner points of the star's initial angle, rotated by `rotation`
     vec3 p0 = (radiusMax * size) * getPosByAngle(rotation);             // Outer point, rotated by `rotation`
@@ -77,7 +79,7 @@ float getStar(vec2 uv, vec2 center, float npoints, float radiusRatio, float size
     // Calculate the position of the current fragment relative to the star's center
     vec2 curPosuv = (uv - center);      // Center UV coordinates, then scale to fit the star size
     float curRadius = length(curPosuv);         // Radius from center, no need to scale further
-    float curPosAngle = atan(curPosuv.x, curPosuv.y) - rotation; // Calculate angle and adjust by `rotation`
+    float curPosAngle = atan(curPosuv.y, curPosuv.x) - rotation; // Calculate angle and adjust by `rotation`
 
     // Determine the fractional position within the current star segment
     float a = fract(curPosAngle / starangle); // Fractional angle position within one segment
@@ -97,49 +99,121 @@ float getStar(vec2 uv, vec2 center, float npoints, float radiusRatio, float size
 }
 
 
-vec4 getStarColor(float v,float alpha) {
-  float steps[6];
-  steps[0] = 0.0;
-  steps[1] = 0.1666;
-  steps[2] = 0.3333;
-  steps[3] = 0.5;
-  steps[4] = 0.6666;
-  steps[5] = 0.9999;
+float getStarWithFade(vec2 uv, vec2 center, float npoints, float radiusRatio, float size, float rotation)
+{
+    float radiusMax = 1.0;
+    float radiusMin = radiusMax * radiusRatio;
+    
+    float PI = 3.1415926;
+    float starangle = 2.0 * PI / npoints; // Angle between points on the star
 
-  vec4 colors[6];
-  colors[0] = uStarColor0;
-  colors[1] = uStarColor1;
-  colors[2] = uStarColor2;
-  colors[3] = uStarColor3;
-  colors[4] = uStarColor4;
-  colors[5] = uStarColor5;
+    // Offset rotation to ensure one point is always up when rotation = 0
+    rotation += PI / 2.0 - starangle / 1.0;
 
-  colors[0].a = alpha;
-  colors[1].a = alpha;
-  colors[2].a = alpha;
-  colors[3].a = alpha;
-  colors[4].a = alpha;
-  colors[5].a = alpha;
+    // Define the positions for the outer and inner points of the star's initial angle, rotated by `rotation`
+    vec3 p0 = (radiusMax * size) * getPosByAngle(rotation);             // Outer point, rotated by `rotation`
+    vec3 p1 = (radiusMin * size) * getPosByAngle(starangle + rotation);  // Inner point, also rotated
 
-  if (v < steps[0]) {
-    return colors[0];
-  }
+    // Calculate the position of the current fragment relative to the star's center
+    vec2 curPosuv = (uv - center);      // Center UV coordinates, then scale to fit the star size
+    float curRadius = length(curPosuv);         // Radius from center, no need to scale further
+    float curPosAngle = atan(curPosuv.y, curPosuv.x) - rotation; // Calculate angle and adjust by `rotation`
 
-  for (int i = 0; i < 5; ++i) {
-    if (v <= steps[i + 1]) {
-      return mix(colors[i], colors[i + 1],
-                 vec4(v - steps[i]) / (steps[i + 1] - steps[i]));
-    }
-  }
+    // Determine the fractional position within the current star segment
+    float a = fract(curPosAngle / starangle); // Fractional angle position within one segment
+    if (a >= 0.5)
+        a = 1.0 - a; // Ensure we are within the first half of the segment (symmetry)
 
-  return colors[5];
+    // Calculate the current point on the star segment, applying rotation
+    a = a * starangle;                          // Actual angle for this position on the segment
+    vec3 curPos = curRadius * getPosByAngle(a + rotation); // Final position, rotated
+
+    // Calculate directions for edge detection using cross product
+    vec3 dir0 = p1 - p0;  // Vector from outer to inner point
+    vec3 dir1 = curPos - p0; // Vector from outer point to current position
+    
+    float crossZ = dir0.x * dir1.y - dir0.y * dir1.x;
+    
+    float result = remap(
+        crossZ,
+        0.0,0.03,//0.0275,
+        0.0,1.0 //hardness [1.0,100]
+    );
+    
+    //brightness 
+    result = result * 7.0;
+    result = clamp(result,0.0,1.0);
+    result = easeInSine(result);
+    
+    return result;
 }
 
-float starSize(float t,float max_size,float power)
+
+vec4 getStarColor(float v, float alpha) {
+    // Clamp v to ensure it's in [0.0, 1.0]
+    v = clamp(v, 0.0, 1.0);
+
+    // Define steps for color interpolation
+    float steps[6];
+    steps[0] = 0.0;
+    steps[1] = 0.1666;
+    steps[2] = 0.3332;
+    steps[3] = 0.4998;
+    steps[4] = 0.6664;
+    steps[5] = 0.8330;
+
+    // Define color values
+    vec4 colors[6];
+    colors[0] = uStarColor0;
+    colors[1] = uStarColor1;
+    colors[2] = uStarColor2;
+    colors[3] = uStarColor3;
+    colors[4] = uStarColor4;
+    colors[5] = uStarColor5;
+
+    // Assign alpha values
+    for (int i = 0; i < 6; ++i) {
+        colors[i].a = alpha * colors[i].a;
+    }
+
+    // Handle edge cases
+    if (v <= steps[0]) {
+        return colors[0];
+    }
+    if (v >= steps[5]) {
+        return colors[5];
+    }
+
+    // Find the correct interpolation segment
+    for (int i = 0; i < 5; ++i) {
+        if (v <= steps[i + 1]) {
+            float t = (v - steps[i]) / (steps[i + 1] - steps[i]);
+            return mix(colors[i], colors[i + 1], t);
+        }
+    }
+
+    // Fallback (should never be reached)
+    return vec4(0.0, 0.0, 0.0, 1.0);
+}
+
+float zeroStartEnd(float t, float max_size, float power)
 {
-  float s = -1 * pow((t-0.5)/(0.5),power)+1;
+// 1|    __________
+//  |   /          \
+//  |  /            \
+//  | /              \ 
+//  |/                \
+// 0|0.................1
+/*
+graph above ... where t is close to 0, or 1 the result will fade to zero
+i.e. this is just the function of power(x,p) shifted
+where x is time, and p is 2.0,4.0,8.0,10.0 ... or any positive even number
+*/
+
+  float s = -1.0 * pow((t-0.5)/(0.5),power)+1.0;
   s = clamp(s,0.0,1.0) * max_size;
   return s;
+
 }
 
 float eightBitScale(float progress)
@@ -185,20 +259,6 @@ float eightBitScale(float progress)
 }
 
 
-vec2 scaleUV(vec2 uv, float scale)
-{
-  // Put texture coordinate origin to center of window.
-  uv = uv * 2.0 - 1.0;
-
-  //scale
-  uv /= mix(1.0,0.0, scale);
-
-  // scale from center
-  uv = uv * 0.5 + 0.5;
-
-  return uv
-}
-
 vec2 scaleUV(vec2 uv, vec2 scale)
 {
   // Put texture coordinate origin to center of window.
@@ -210,101 +270,115 @@ vec2 scaleUV(vec2 uv, vec2 scale)
   // scale from center
   uv = uv * 0.5 + 0.5;
 
-  return uv
+  return uv;
 }
 
-float get4PStars(float progress)
+
+
+vec4 get4pStars(vec2 starUV, float progress)
 {
-  
-  float stars = 0.0;//all the stars
+  //this will be the result to return 
+  vec4 result = vec4(0.0);
 
-  for (int x = 0 ; x < u4PStars;x++)
+  vec2 h = vec2(0.0);
+  float y = 0.0;
+
+  for (float x = 0.0; x < u4PStars; ++x) 
   {
+      h = hash21(x);
+      y = mix( 0.0 - h.y , 1.0+(1.0-h.y) , (1.0 - progress));
 
-    vec2 h = hash21(float(x));
-    float yprog = mix( 0.0 - h.y , 1.0+(1.0-h.y) , progress);
-    yprog =  clamp(yprog,0.0001,0.999);
+      float a4ps = getStarWithFade(
+        starUV, 
+        vec2( sin(h.x * 6.28 ) * 0.66, y),      //position (x, y)
+        4.0,                                    //nPoints
+        0.33,                                   //radiusRatio
+        zeroStartEnd(y,0.1 ,4.0),               //Size  
+        progress * 6.28 * float(u4PSRotation)   //rotation
+        );
 
-    float star = 0.0;
-    //blur the star a bit
-    for (int a = 1; a < 10 ; a++)
-    {
-      star += getStar(
-        uv, 
-        vec2( sin(h.x * 6.28 ) * 0.33, yprog), //position (x, y)
-        4.0, //nPoints
-        0.5, //radiusRatio
-        starSize(yprog,0.03 + ( 0.1 * (float(a)/10.0)) ,2.0), //Size   
-        progress * 6.28 * u4PSRotation  //rotation
-        ) * (1.0/10.0);
-    }
-
-    star = clamp(star,0.0,1.0);
-
-    stars += star;
+      result = alphaOver(
+        result,
+        vec4(u4PSColor.r,u4PSColor.g,u4PSColor.b,u4PSColor.a * a4ps)
+        );
   }
 
-  return stars;
-
+  // and we are returning the result
+  return result;
 }
 
-float getRays(float progress)
+vec4 getRays(float progress)
 {
   vec2 rayUV = iTexCoord.st;
-  rayUV *= vec2(10.0,0.05);
-  rayUV.y += progress * -0.5;
+  rayUV *= vec2(10.0,0.5);
+  rayUV.y += progress * -1.0;
   
   float ray = simplex2D(rayUV);
-  ray *= starSize(iTexCoord.t,1.0,8.0);
-  ray *= starSize(progress,1.0,8.0);
+  ray *= zeroStartEnd(iTexCoord.t,1.0,8.0);
+  ray *= zeroStartEnd(progress,1.0,8.0);
 
 
   ray = remap(
-    ray,
+    ray * 1.10,
     0.0,1.0,
     -5.0,1.0
   );
   ray = clamp(ray,0.0,1.0);
 
+  return vec4(uRaysColor.r,uRaysColor.g,uRaysColor.b,uRaysColor.a * ray);
+
 }
 
-vec4 get5PStars(float progress, vec4 oColor)
+vec4 get5PStars(vec2 starUV, float aspect, float progress, float oColorAlpha)
 {
-  for (int ring = 0; ring < uRings; ring++)
+  //this will be the result to return 
+  vec4 result = vec4(0.0);
+
+  vec2 h = vec2(0.0);
+  float y = 0.0;
+
+  //for each ring
+  for (float r = 0.0; r < uRings; ++r) 
   {
-    float spread = ring*(1.0/uRings);
-    yprog = mix( 0.0 - spread , 1.0+(1.0-spread) , progress);
-    yprog = clamp(yprog,0.0001,0.999);
+    
+    float spread = r*(1.0/uRings);
+    y = mix( 0.0 - spread , 1.0+(1.0-spread) , 1.0 - progress);
+    y = clamp(y,0.00001,0.99999);
 
-    for (int x = 0; x < uStarPerRing; x++) 
+    //each star in each ring
+    for (float s = 0.0; s < uStarPerRing; ++s) 
     {
-      star = getStar(
-          uv, 
-          vec2( sin(progress * uRingRotation * 6.28 + (x*(6.28/uStarPerRing))) * aspect , yprog), //position (x, y)
-          5.0, //nPoints
-          0.5, //radiusRatio
-          starSize(yprog,0.03,2.0), //Size   
-          3.14 //rotation
-          );
+      float a5ps = getStar(
+        starUV, 
+        vec2( sin(progress * uRingRotation * 6.28 + (s*(6.28/uStarPerRing))) * aspect * 0.33 , y),  //position (x, y)
+        5.0,                                                                                            //nPoints
+        0.5,                                                                                            //radiusRatio
+        zeroStartEnd(y,0.1,2.0),                                                                        //Size   
+        0.0                                                                                             //rotation
+        );
+      a5ps = clamp(a5ps,0.0,1.0);
 
-
-      //put the star in back or the front of the window 
-      float depth = cos(progress * uRingRotation * 6.28 + (x*(6.28/uStarPerRing)) );
+      // //put the star in back or the front of the window 
+      float depth = cos(progress * uRingRotation * 6.28 + (s*(6.28/uStarPerRing)) );
       if (depth < 0.0)
       {
-        oColor = alphaOver(oColor,getStarColor(yprog,star));
+        result = alphaOver(result,getStarColor(y,a5ps));
       }
       else
       {
-        oColor = alphaOver(getStarColor(yprog,star),oColor);
+        result = alphaOver(getStarColor(y,a5ps) * (1.0 - oColorAlpha),result);
       }
-
-      
     }
+
+
   }
 
-  return oColor;
+  // and we are returning the result
+  return result;
 }
+
+
+
 
 void main() {
 
@@ -315,13 +389,12 @@ void main() {
 
   if (u8BitStyle)
   {
-    float scale8bit = eightBitScale(progress)
+    float scale8bit = eightBitScale(progress);
 
     oColor = getInputColor(
-      scaleUV(iTexCoord.st,scale8bit)
+      scaleUV(iTexCoord.st,vec2(scale8bit,scale8bit))
     );
 
-    setOutputColor(oColor);
   }
   else
   {
@@ -332,31 +405,34 @@ void main() {
     oColor = getInputColor(
       scaleUV(iTexCoord.st,scaleV2)
     );
+    float oColorAlpha = oColor.a; //saving this for later 
 
 
     float aspect = uSize.x / uSize.y;
-    vec2 starUV = vec2(iTexCoord.s - 0.5,iTexCoord.t) * vec2(aspect, 1.0);
+    vec2 starUV = vec2(iTexCoord.s - 0.5,1.0 - iTexCoord.t) * vec2(aspect, 1.0);
+
 
     if (uEnable4PStars)
     {
-      float 4PS = get4PStars(progress);
-      oColor = alphaOver(oColor,vec4(u4PSColor.r,u4PSColor.g,u4PSColor.b,4PS));
+      oColor = alphaOver(oColor,get4pStars(starUV,progress));
     }
 
     if (uEnableRays)
     {
-      float rays = getRays(progress)later
-      oColor = alphaOver(oColor,vec4(uRaysColor.r,uRaysColor.g,uRaysColor.b,rays));
+      oColor = alphaOver(oColor,getRays(progress));
     }
+
 
     if (uEnable5pStars)
     {
-      oColor = get5PStars(progress,oColor);
+      oColor = alphaOver(oColor,get5PStars(starUV,aspect,progress,oColorAlpha));
     }
 
   }
 
 
+
+  
   setOutputColor(oColor);
 
   
