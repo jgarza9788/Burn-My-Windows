@@ -33,6 +33,7 @@
 // The width of the fading effect is loaded from the settings.
 uniform float uColorSpeed;
 uniform float uColorOffset;
+uniform float uColorSaturation;
 
 vec3 offsetHue(vec3 color, float hueOffset) {
     // Convert RGB to HSV
@@ -94,7 +95,7 @@ void main() {
     vec2 uv = iTexCoord.st;
 
     // this controls the shape ... turn 25.0 into 100.0 to be more square at the end 
-    float p = mix(1.5,25.0,progress);
+    float p = mix(2.0,50.0,progress);
 
     //this will be used later to make a mask
     float m = mix(
@@ -114,6 +115,8 @@ void main() {
 
     //offset the Hue
     color = offsetHue(color, uColorOffset);
+    //clamp and saturate
+    color = clamp(color * uColorSaturation,vec3(0.0),vec3(1.0));
 
     //apply the color and the mask
     oColor.r = mix(oColor.r, color.r, color.r);

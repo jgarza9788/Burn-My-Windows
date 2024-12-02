@@ -41,6 +41,7 @@ export default class Effect {
       // Store uniform locations of newly created shaders.
       shader._uColorSpeed = shader.get_uniform_location("uColorSpeed");
       shader._uColorOffset = shader.get_uniform_location("uColorOffset");
+      shader._uColorSaturation = shader.get_uniform_location("uColorSaturation");
 
       // Write all uniform values at the start of each animation.
       shader.connect("begin-animation", (shader, settings) => {
@@ -51,6 +52,10 @@ export default class Effect {
 
         shader.set_uniform_float(shader._uColorOffset, 1, [
           settings.get_double("aura-glow-color-offset"),
+        ]);
+
+        shader.set_uniform_float(shader._uColorSaturation, 1, [
+          settings.get_double("aura-glow-color-saturation"),
         ]);
 
 
@@ -89,6 +94,7 @@ export default class Effect {
     dialog.bindAdjustment('aura-glow-animation-time');
     dialog.bindAdjustment('aura-glow-color-speed');
     dialog.bindAdjustment('aura-glow-color-offset');
+    dialog.bindAdjustment('aura-glow-color-saturation');
   }
 
   // ---------------------------------------------------------------- API for extension.js

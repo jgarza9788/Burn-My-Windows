@@ -879,6 +879,12 @@ SPDX-License-Identifier: CC0-1.0
       <description>Width of the fading effect.</description>
     </key>
 
+    <key name="aura-glow-color-saturation" type="d">
+      <default>1.0</default>
+      <summary>Simple Fade Width</summary>
+      <description>Width of the fading effect.</description>
+    </key>
+
   </schema>
 
 </schemalist>
