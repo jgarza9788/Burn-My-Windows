@@ -857,32 +857,32 @@ SPDX-License-Identifier: CC0-1.0
 
     <key name="aura-glow-enable-effect" type="b">
       <default>false</default>
-      <summary>Simple Fade Enable Effect</summary>
-      <description>Use the Simple Fade effect.</description>
+      <summary>Aura Glow Enable Effect</summary>
+      <description>Use the Aura Glow  effect.</description>
     </key>
 
     <key name="aura-glow-animation-time" type="i">
       <default>1500</default>
-      <summary>Simple Fade Animation Time</summary>
-      <description>The time the Simple Fade effect takes.</description>
+      <summary>Aura Glow Animation Time</summary>
+      <description>The time the Aura Glow effect takes.</description>
     </key>
 
     <key name="aura-glow-color-offset" type="d">
       <default>0.0</default>
-      <summary>Simple Fade Width</summary>
-      <description>Width of the fading effect.</description>
+      <summary>Aura Glow Color Offset</summary>
+      <description>Changes the inital color of the glow</description>
     </key>
 
     <key name="aura-glow-color-speed" type="d">
       <default>1.0</default>
-      <summary>Simple Fade Width</summary>
-      <description>Width of the fading effect.</description>
+      <summary>Aura Glow Color Speed</summary>
+      <description>The Speed at which the color changes</description>
     </key>
 
     <key name="aura-glow-color-saturation" type="d">
       <default>1.0</default>
-      <summary>Simple Fade Width</summary>
-      <description>Width of the fading effect.</description>
+      <summary>Aura Glow Color Saturation</summary>
+      <description>Amount of color in the effect</description>
     </key>
 
   </schema>

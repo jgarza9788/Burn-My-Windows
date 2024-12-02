@@ -24,8 +24,7 @@ const ShaderFactory = await utils.importInShellOnly("./ShaderFactory.js");
 const _ = await utils.importGettext();
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// This effect ...                                                                      //
-// <- Please add a description of your effect here ->                                   //
+// This effect was inspired by apple's new siri effect.                                 //
 //////////////////////////////////////////////////////////////////////////////////////////
 
 // The effect class can be used to get some metadata (like the effect's name or supported
