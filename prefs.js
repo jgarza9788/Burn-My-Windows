@@ -24,6 +24,7 @@ import * as utils from './src/utils.js';
 import {ProfileManager} from './src/ProfileManager.js';
 
 import Apparition from './src/effects/Apparition.js';
+import AuraGlow from './src/effects/AuraGlow.js';
 import BrokenGlass from './src/effects/BrokenGlass.js';
 import Doom from './src/effects/Doom.js';
 import EnergizeA from './src/effects/EnergizeA.js';
@@ -71,7 +72,7 @@ export default class BurnMyWindowsPreferences extends ExtensionPreferences {
 
     // New effects must be registered here and in extension.js.
     this._ALL_EFFECTS = [
-      Apparition, BrokenGlass, Doom,       EnergizeA, EnergizeB,  Fire,
+      Apparition, AuraGlow, BrokenGlass, Doom,       EnergizeA, EnergizeB,  Fire,
       Focus,      Glide,       Glitch,     Hexagon,   Incinerate, Matrix,
       PaintBrush, Pixelate,    PixelWheel, PixelWipe, Portal,     SnapOfDisintegration,
       TRexAttack, TVEffect,    TVGlitch,   Wisps,

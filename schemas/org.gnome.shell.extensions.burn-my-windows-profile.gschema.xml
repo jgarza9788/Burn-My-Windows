@@ -850,6 +850,41 @@ SPDX-License-Identifier: CC0-1.0
       <description>The Quality of the Blur (Setting this too high may increase GPU load and affect performance)</description>
     </key>
 
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- Aura Glow Effect Options                                                    -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <key name="aura-glow-enable-effect" type="b">
+      <default>false</default>
+      <summary>Simple Fade Enable Effect</summary>
+      <description>Use the Simple Fade effect.</description>
+    </key>
+
+    <key name="aura-glow-animation-time" type="i">
+      <default>1500</default>
+      <summary>Simple Fade Animation Time</summary>
+      <description>The time the Simple Fade effect takes.</description>
+    </key>
+
+    <key name="aura-glow-color-offset" type="d">
+      <default>0.0</default>
+      <summary>Simple Fade Width</summary>
+      <description>Width of the fading effect.</description>
+    </key>
+
+    <key name="aura-glow-color-speed" type="d">
+      <default>1.0</default>
+      <summary>Simple Fade Width</summary>
+      <description>Width of the fading effect.</description>
+    </key>
+
+    <key name="aura-glow-color-saturation" type="d">
+      <default>1.0</default>
+      <summary>Simple Fade Width</summary>
+      <description>Width of the fading effect.</description>
+    </key>
+
   </schema>
 
 </schemalist>
