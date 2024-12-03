@@ -867,6 +867,12 @@ SPDX-License-Identifier: CC0-1.0
       <description>The time the Aura Glow effect takes.</description>
     </key>
 
+    <key name="aura-glow-random-color" type="b">
+      <default>false</default>
+      <summary>Aura Glow Random Color Offset</summary>
+      <description>Ramdomize the color offset</description>
+    </key>
+
     <key name="aura-glow-color-offset" type="d">
       <default>0.0</default>
       <summary>Aura Glow Color Offset</summary>
@@ -883,6 +889,18 @@ SPDX-License-Identifier: CC0-1.0
       <default>1.0</default>
       <summary>Aura Glow Color Saturation</summary>
       <description>Amount of color in the effect</description>
+    </key>
+
+    <key name="aura-glow-blur" type="d">
+      <default>20.0</default>
+      <summary>Aura Glow Blur</summary>
+      <description>Changes the Blue Amount</description>
+    </key>
+
+    <key name="aura-glow-blur-bleed" type="b">
+      <default>false</default>
+      <summary>Aura Glow Blur</summary>
+      <description>Changes the Blue Amount</description>
     </key>
 
   </schema>

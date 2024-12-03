@@ -73,14 +73,29 @@ export default class BurnMyWindows extends Extension {
 
     // New effects must be registered here and in prefs.js.
     this._ALL_EFFECTS = [
-      new Apparition(), new AuraGlow(), new BrokenGlass(), new Doom(),
-      new EnergizeA(),  new EnergizeB(),   new Fire(),
-      new Focus(),      new Glide(),       new Glitch(),
-      new Hexagon(),    new Incinerate(),  new Matrix(),
-      new PaintBrush(), new Pixelate(),    new PixelWheel(),
-      new PixelWipe(),  new Portal(),      new SnapOfDisintegration(),
-      new TRexAttack(), new TVEffect(),    new TVGlitch(),
-      new Wisps(), 
+      new Apparition(),
+      new AuraGlow(),
+      new BrokenGlass(),
+      new Doom(),
+      new EnergizeA(),
+      new EnergizeB(),
+      new Fire(),
+      new Focus(),
+      new Glide(),
+      new Glitch(),
+      new Hexagon(),
+      new Incinerate(),
+      new Matrix(),
+      new PaintBrush(),
+      new Pixelate(),
+      new PixelWheel(),
+      new PixelWipe(),
+      new Portal(),
+      new SnapOfDisintegration(),
+      new TRexAttack(),
+      new TVEffect(),
+      new TVGlitch(),
+      new Wisps(),
     ];
 
     // Load all of our resources.

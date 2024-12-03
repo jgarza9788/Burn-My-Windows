@@ -32,8 +32,12 @@
 
 // The width of the fading effect is loaded from the settings.
 uniform float uColorSpeed;
+uniform bool uRandomColorOffset;
 uniform float uColorOffset;
 uniform float uColorSaturation;
+uniform float uBlur;
+uniform bool uBlurBleed;
+uniform vec2 uSeed;
 
 vec3 offsetHue(vec3 color, float hueOffset) {
     // Convert RGB to HSV
@@ -82,6 +86,23 @@ vec3 offsetHue(vec3 color, float hueOffset) {
     return rgb + m;
 }
 
+// A simple blur function
+vec4 blur(vec2 uv, float radius, float samples) {
+  vec4 color = vec4(0.0);
+
+  const float tau        = 6.28318530718;
+  const float directions = 15.0;
+
+  for (float d = 0.0; d < tau; d += tau / directions) {
+    for (float s = 0.0; s < 1.0; s += 1.0 / samples) {
+      vec2 offset = vec2(cos(d), sin(d)) * radius * (1.0 - s) / uSize;
+      color += getInputColor(uv + offset);
+    }
+  }
+
+  return color / samples / directions;
+}
+
 void main() {
 
     // This gradually dissolves from [1..0] from the outside to the center. We
@@ -91,11 +112,30 @@ void main() {
     // Get the color from the window texture.
     vec4 oColor = getInputColor(iTexCoord.st);
     
+    // Calculate the aspect ratio of the render area
+    float aspect = uSize.x / uSize.y;
+
     //standard uv
     vec2 uv = iTexCoord.st;
 
-    // this controls the shape ... turn 25.0 into 100.0 to be more square at the end 
-    float p = mix(2.0,50.0,progress);
+    // tuv is for when progress is near 0
+    vec2 tuv = uv;
+    tuv -= 0.5; // Shift UV coordinates to center (from [-0.5 to 0.5])
+    tuv.x *= aspect; // Scale x-coordinate to match aspect ratio
+    tuv += 0.5; // Shift UV coordinates back (from [0 to 1])
+    
+    //mixing the UVs
+    uv = mix(tuv,uv,easeOutExpo(progress));
+
+    // this controls the shape 
+    // -1.0 would be a diamond-ish
+    // 0.0 would be a rounded diamond
+    // 1.0 would be a circle
+    // 2.0  will be sqircle
+    // 1000.0 will be very square
+    float p = mix(1.0,1000.0,
+        easeInExpo(progress)
+        );
 
     //this will be used later to make a mask
     float m = mix(
@@ -110,19 +150,50 @@ void main() {
     float mask = (m > progress) ? 0.0 : 1.0 ;
 
     //pre-color
-    float c = easeInQuart( 1.0 - abs(m-progress) );
+    float c =  1.0 - abs(m-progress) ;
+    c = easeInOutSine(c);
     vec3 color = c * (0.5 + 0.5*cos(progress*uColorSpeed+uv.xyx+vec3(0,2,4)));
 
+    //used for blur later ... 
+    //calculate this before saturating it
+    float b = (color.r + color.g + color.b)/3.0;
+
     //offset the Hue
-    color = offsetHue(color, uColorOffset);
+    float colorOffset = (uRandomColorOffset) ? hash12(uSeed) : uColorOffset ;
+    color = offsetHue(color, colorOffset);
     //clamp and saturate
     color = clamp(color * uColorSaturation,vec3(0.0),vec3(1.0));
 
+    float oColorAlpha = oColor.a;
+
+    //blur-ify
+    if (uBlur > 0.0)
+    {
+        oColor = blur( iTexCoord.st, b * uBlur, 7.0);
+
+        if (uBlurBleed)
+        {
+            //allow the blur to bleed from the edges of the window
+        }
+        else
+        {
+            oColor.a = oColorAlpha;
+        }
+    }
+
+
+    
     //apply the color and the mask
-    oColor.r = mix(oColor.r, color.r, color.r);
-    oColor.g = mix(oColor.g, color.g, color.g);
-    oColor.b = mix(oColor.b, color.b, color.b);
+    oColor.rgb = mix(oColor.rgb, color, color);
     oColor.a *= mask;
+
+    //i want to fade out the last ~10% of the animation
+    float lastfade = remap(progress,0.0,0.1,0.0,1.0);
+    lastfade = clamp(lastfade,0.0,1.0);
+    lastfade = easeInSine(lastfade);
+    
+    //apply the lastfade
+    oColor.a *= lastfade;
 
     setOutputColor(oColor);
 

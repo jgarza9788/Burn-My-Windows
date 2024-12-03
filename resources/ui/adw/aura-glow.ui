@@ -35,6 +35,13 @@ SPDX-License-Identifier: GPL-3.0-or-later
     <property name="page-increment">0.25</property>
   </object>
 
+  <object class="GtkAdjustment" id="aura-glow-blur">
+    <property name="upper">100.0</property>
+    <property name="lower">0.0</property>
+    <property name="step-increment">0.50</property>
+    <property name="page-increment">1.00</property>
+  </object>
+
   <object class="AdwExpanderRow" id="aura-glow-prefs">
 
     <child>
@@ -63,11 +70,35 @@ SPDX-License-Identifier: GPL-3.0-or-later
       </object>
     </child>
 
+
     <child>
       <object class="AdwActionRow">
-        <property name="title" translatable="yes">Color Offset</property>
+        <property name="title" translatable="yes">Random Color</property>
+        <property name="activatable-widget">aura-glow-random-color</property>
         <child>
-          <object class="GtkScale">
+          <object class="GtkSwitch" id="aura-glow-random-color">
+            <property name="valign">center</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="reset-aura-glow-random-color">
+            <property name="icon-name">edit-clear-symbolic</property> 
+            <property name="valign">center</property>
+            <property name="tooltip-text" translatable="yes">Reset to Default Value</property>
+            <style>
+              <class name="flat" />
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwActionRow" id="aura-glow-action-row">
+        <property name="title" translatable="yes">Color Offset</property>
+        <property name="subtitle" translatable="yes">Red</property>
+        <child>
+          <object class="GtkScale" id="aura-glow-color-offset-scale">
             <property name="valign">center</property>
             <property name="draw-value">1</property>
             <property name="digits">2</property>
@@ -131,6 +162,57 @@ SPDX-License-Identifier: GPL-3.0-or-later
         <child>
           <object class="GtkButton" id="reset-aura-glow-color-saturation">
             <property name="icon-name">edit-clear-symbolic</property>
+            <property name="valign">center</property>
+            <property name="tooltip-text" translatable="yes">Reset to Default Value</property>
+            <style>
+              <class name="flat" />
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <child>
+      <object class="AdwActionRow">
+        <property name="title" translatable="yes">Blur Amount</property>
+        <property name="subtitle" translatable="yes">0 is Off</property>
+        <child>
+          <object class="GtkScale">
+            <property name="valign">center</property>
+            <property name="draw-value">1</property>
+            <property name="digits">2</property>
+            <property name="value-pos">left</property>
+            <property name="width-request">300</property>
+            <property name="adjustment">aura-glow-blur</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="reset-aura-glow-blur">
+            <property name="icon-name">edit-clear-symbolic</property>
+            <property name="valign">center</property>
+            <property name="tooltip-text" translatable="yes">Reset to Default Value</property>
+            <style>
+              <class name="flat" />
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+
+
+    <child>
+      <object class="AdwActionRow">
+        <property name="title" translatable="yes">Blur Bleed</property>
+        <property name="subtitle" translatable="yes">Allow the Blur to bleed beyond the window's edge</property>
+        <property name="activatable-widget">aura-glow-blur-bleed</property>
+        <child>
+          <object class="GtkSwitch" id="aura-glow-blur-bleed">
+            <property name="valign">center</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="reset-aura-glow-blur-bleed">
+            <property name="icon-name">edit-clear-symbolic</property> 
             <property name="valign">center</property>
             <property name="tooltip-text" translatable="yes">Reset to Default Value</property>
             <style>

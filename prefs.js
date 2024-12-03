@@ -72,10 +72,29 @@ export default class BurnMyWindowsPreferences extends ExtensionPreferences {
 
     // New effects must be registered here and in extension.js.
     this._ALL_EFFECTS = [
-      Apparition, AuraGlow, BrokenGlass, Doom,       EnergizeA, EnergizeB,  Fire,
-      Focus,      Glide,       Glitch,     Hexagon,   Incinerate, Matrix,
-      PaintBrush, Pixelate,    PixelWheel, PixelWipe, Portal,     SnapOfDisintegration,
-      TRexAttack, TVEffect,    TVGlitch,   Wisps,
+      Apparition,
+      AuraGlow,
+      BrokenGlass,
+      Doom,
+      EnergizeA,
+      EnergizeB,
+      Fire,
+      Focus,
+      Glide,
+      Glitch,
+      Hexagon,
+      Incinerate,
+      Matrix,
+      PaintBrush,
+      Pixelate,
+      PixelWheel,
+      PixelWipe,
+      Portal,
+      SnapOfDisintegration,
+      TRexAttack,
+      TVEffect,
+      TVGlitch,
+      Wisps,
     ];
 
 
