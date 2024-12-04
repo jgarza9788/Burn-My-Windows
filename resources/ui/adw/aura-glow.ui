@@ -35,6 +35,13 @@ SPDX-License-Identifier: GPL-3.0-or-later
     <property name="page-increment">0.25</property>
   </object>
 
+  <object class="GtkAdjustment" id="aura-glow-fade-out">
+    <property name="upper">0.75</property>
+    <property name="lower">0.0</property>
+    <property name="step-increment">0.10</property>
+    <property name="page-increment">0.25</property>
+  </object>
+
   <object class="GtkAdjustment" id="aura-glow-blur">
     <property name="upper">100.0</property>
     <property name="lower">0.0</property>
@@ -69,7 +76,6 @@ SPDX-License-Identifier: GPL-3.0-or-later
         </child>
       </object>
     </child>
-
 
     <child>
       <object class="AdwActionRow">
@@ -161,6 +167,32 @@ SPDX-License-Identifier: GPL-3.0-or-later
         </child>
         <child>
           <object class="GtkButton" id="reset-aura-glow-color-saturation">
+            <property name="icon-name">edit-clear-symbolic</property>
+            <property name="valign">center</property>
+            <property name="tooltip-text" translatable="yes">Reset to Default Value</property>
+            <style>
+              <class name="flat" />
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+
+        <child>
+      <object class="AdwActionRow">
+        <property name="title" translatable="yes">Fade Out</property>
+        <child>
+          <object class="GtkScale">
+            <property name="valign">center</property>
+            <property name="draw-value">1</property>
+            <property name="digits">2</property>
+            <property name="value-pos">left</property>
+            <property name="width-request">300</property>
+            <property name="adjustment">aura-glow-fade-out</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="reset-aura-glow-fade-out">
             <property name="icon-name">edit-clear-symbolic</property>
             <property name="valign">center</property>
             <property name="tooltip-text" translatable="yes">Reset to Default Value</property>

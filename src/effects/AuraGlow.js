@@ -44,6 +44,7 @@ export default class Effect {
       shader._uRandomColorOffset = shader.get_uniform_location('uRandomColorOffset');
       shader._uColorOffset       = shader.get_uniform_location('uColorOffset');
       shader._uColorSaturation   = shader.get_uniform_location('uColorSaturation');
+      shader._uFadeOut   = shader.get_uniform_location('uFadeOut');
       shader._uBlur   = shader.get_uniform_location('uBlur');
       shader._uBlurBleed = shader.get_uniform_location('uBlurBleed');
       shader._uSeed              = shader.get_uniform_location('uSeed');
@@ -65,6 +66,10 @@ export default class Effect {
           settings.get_double('aura-glow-color-saturation'),
         ]);
 
+        shader.set_uniform_float(shader._uFadeOut, 1, [
+          settings.get_double('aura-glow-fade-out'),
+        ]);
+
         shader.set_uniform_float(shader._uBlur, 1, [
           settings.get_double('aura-glow-blur'),
         ]);
@@ -79,6 +84,29 @@ export default class Effect {
       });
     });
   }
+
+  // static getCurrentThemeMode() {
+  //   const Gtk = imports.gi.Gtk;
+  //   const Gio = imports.gi.Gio;
+
+  //   // Get GSettings theme name
+  //   const settings = new Gio.Settings({ schema: "org.gnome.desktop.interface" });
+  //   const themeName = settings.get_string("gtk-theme");
+
+  //   // Check if the theme name contains "dark"
+  //   if (themeName.toLowerCase().includes("dark")) {
+  //       return "dark";
+  //   }
+
+  //   // Check GTK's dark theme preference
+  //   Gtk.init(null);
+  //   const gtkSettings = Gtk.Settings.get_default();
+  //   if (gtkSettings.gtk_application_prefer_dark_theme) {
+  //       return "dark";
+  //   }
+
+  //   return "light";
+  // }
 
   // ---------------------------------------------------------------------------- metadata
 
@@ -113,6 +141,7 @@ export default class Effect {
     dialog.bindSwitch('aura-glow-random-color');
     dialog.bindAdjustment('aura-glow-color-offset');
     dialog.bindAdjustment('aura-glow-color-saturation');
+    dialog.bindAdjustment('aura-glow-fade-out');
     dialog.bindAdjustment('aura-glow-blur');
     dialog.bindSwitch('aura-glow-blur-bleed');
 

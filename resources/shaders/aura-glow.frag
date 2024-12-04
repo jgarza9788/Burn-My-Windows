@@ -35,9 +35,11 @@ uniform float uColorSpeed;
 uniform bool uRandomColorOffset;
 uniform float uColorOffset;
 uniform float uColorSaturation;
+uniform float uFadeOut;
 uniform float uBlur;
 uniform bool uBlurBleed;
 uniform vec2 uSeed;
+
 
 vec3 offsetHue(vec3 color, float hueOffset) {
     // Convert RGB to HSV
@@ -188,7 +190,7 @@ void main() {
     oColor.a *= mask;
 
     //i want to fade out the last ~10% of the animation
-    float lastfade = remap(progress,0.0,0.1,0.0,1.0);
+    float lastfade = remap(progress,0.0,uFadeOut,0.0,1.0);
     lastfade = clamp(lastfade,0.0,1.0);
     lastfade = easeInSine(lastfade);
     
