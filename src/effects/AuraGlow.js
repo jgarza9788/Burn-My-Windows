@@ -44,10 +44,14 @@ export default class Effect {
       shader._uRandomColorOffset = shader.get_uniform_location('uRandomColorOffset');
       shader._uColorOffset       = shader.get_uniform_location('uColorOffset');
       shader._uColorSaturation   = shader.get_uniform_location('uColorSaturation');
-      shader._uFadeOut   = shader.get_uniform_location('uFadeOut');
-      shader._uBlur   = shader.get_uniform_location('uBlur');
-      shader._uBlurBleed = shader.get_uniform_location('uBlurBleed');
-      shader._uSeed              = shader.get_uniform_location('uSeed');
+
+      shader._uEdgeSize     = shader.get_uniform_location('uEdgeSize');
+      shader._uEdgeShape    = shader.get_uniform_location('uEdgeShape');
+      shader._uEdgeHardness = shader.get_uniform_location('uEdgeHardness');
+
+      shader._uBlur    = shader.get_uniform_location('uBlur');
+      shader._uFadeOut = shader.get_uniform_location('uFadeOut');
+      shader._uSeed    = shader.get_uniform_location('uSeed');
 
       // Write all uniform values at the start of each animation.
       shader.connect('begin-animation', (shader, settings) => {
@@ -66,16 +70,23 @@ export default class Effect {
           settings.get_double('aura-glow-color-saturation'),
         ]);
 
-        shader.set_uniform_float(shader._uFadeOut, 1, [
-          settings.get_double('aura-glow-fade-out'),
+        shader.set_uniform_float(shader._uEdgeSize, 1, [
+          settings.get_double('aura-glow-edge-size'),
+        ]);
+        shader.set_uniform_float(shader._uEdgeShape, 1, [
+          settings.get_double('aura-glow-edge-shape'),
+        ]);
+        shader.set_uniform_float(shader._uEdgeHardness, 1, [
+          settings.get_double('aura-glow-edge-hardness'),
         ]);
 
         shader.set_uniform_float(shader._uBlur, 1, [
           settings.get_double('aura-glow-blur'),
         ]);
 
-        shader.set_uniform_float(shader._uBlurBleed, 1,
-          [settings.get_boolean('aura-glow-blur-bleed')]);
+        shader.set_uniform_float(shader._uFadeOut, 1, [
+          settings.get_double('aura-glow-fade-out'),
+        ]);
 
         // this will be used with a has function to get a random number
         // clang-format off
@@ -141,9 +152,13 @@ export default class Effect {
     dialog.bindSwitch('aura-glow-random-color');
     dialog.bindAdjustment('aura-glow-color-offset');
     dialog.bindAdjustment('aura-glow-color-saturation');
-    dialog.bindAdjustment('aura-glow-fade-out');
+
+    dialog.bindAdjustment('aura-glow-edge-size');
+    dialog.bindAdjustment('aura-glow-edge-shape');
+    dialog.bindAdjustment('aura-glow-edge-hardness');
+
     dialog.bindAdjustment('aura-glow-blur');
-    dialog.bindSwitch('aura-glow-blur-bleed');
+    dialog.bindAdjustment('aura-glow-fade-out');
 
     // enable and disable the one slider
     function EnableDisablePref(dialog, state) {
@@ -177,27 +192,27 @@ export default class Effect {
 
     // Define an array of color names based on the slider value
     const colorNames = [
-      "Red",          // 0.00
-      "Reddish-Orange", // 0.05
-      "Orange",       // 0.10
-      "Yellow-Orange",// 0.15
-      "Yellow-Green", // 0.20
-      "Lime Green",   // 0.25
-      "Green",        // 0.30
-      "Greenish-Cyan",// 0.35
-      "Aqua",         // 0.40
-      "Light Cyan",   // 0.45
-      "Cyan",         // 0.50
-      "Sky Cyan",     // 0.55
-      "Sky Blue",     // 0.60
-      "Light Blue",   // 0.65
-      "Blue",         // 0.70
-      "Indigo",       // 0.75
-      "Purple",       // 0.80
-      "Magenta",      // 0.85
-      "Pinkish-Red",  // 0.90
-      "Crimson",      // 0.95
-      "Red"           // 1.00 (wraps around)
+      'Red',             // 0.00
+      'Reddish-Orange',  // 0.05
+      'Orange',          // 0.10
+      'Yellow-Orange',   // 0.15
+      'Yellow-Green',    // 0.20
+      'Lime Green',      // 0.25
+      'Green',           // 0.30
+      'Greenish-Cyan',   // 0.35
+      'Aqua',            // 0.40
+      'Light Cyan',      // 0.45
+      'Cyan',            // 0.50
+      'Sky Cyan',        // 0.55
+      'Sky Blue',        // 0.60
+      'Light Blue',      // 0.65
+      'Blue',            // 0.70
+      'Indigo',          // 0.75
+      'Purple',          // 0.80
+      'Magenta',         // 0.85
+      'Pinkish-Red',     // 0.90
+      'Crimson',         // 0.95
+      'Red'              // 1.00 (wraps around)
     ];
 
     // Function to update the subtitle based on the slider value

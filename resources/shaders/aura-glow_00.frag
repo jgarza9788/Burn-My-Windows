@@ -37,25 +37,8 @@ uniform float uColorOffset;
 uniform float uColorSaturation;
 uniform float uFadeOut;
 uniform float uBlur;
+uniform bool uBlurBleed;
 uniform vec2 uSeed;
-
-
-/*
-this controls the end shape
--5.0 large Star
--3.0 Star
-1.0 Dimond
-2.0 Circle
-3.0 Squircle 
-5.0 Square
-*/
-uniform float uEdgeShape;
-
-//the size of the edge color
-uniform float uEdgeSize;
-
-//soft <--> hard
-uniform float uEdgeHardness;
 
 
 vec3 offsetHue(vec3 color, float hueOffset) {
@@ -128,17 +111,6 @@ void main() {
     // switch the direction for opening and closing.
     float progress = uForOpening ? uProgress : 1.0 - uProgress ;
 
-    //adjusting for Gnome
-    if (uPadding > 0.0)
-    {
-        progress = remap(
-            progress, 0.0, ((uSize.x + (uPadding*2.0)) / uSize.x) 
-            ,0.0, 1.0 
-            );
-        progress = clamp(progress,0.0,1.0);
-    }
-    
-
     // Get the color from the window texture.
     vec4 oColor = getInputColor(iTexCoord.st);
     
@@ -163,7 +135,7 @@ void main() {
     // 1.0 would be a circle
     // 2.0  will be sqircle
     // 1000.0 will be very square
-    float p = mix(uEdgeShape,1000.0,
+    float p = mix(1.0,1000.0,
         easeInExpo(progress)
         );
 
@@ -176,47 +148,44 @@ void main() {
         )
         );
 
-
-    //this calculates the edge of the effect
-    float edge = abs(m-progress) ;
-    float e = mix(0.0,uEdgeSize,1.0 - progress);
-    edge = remap(edge,0.0,e,0.0,1.0);
-    edge = clamp(edge,0.0,1.0);
-    edge = 1.0 - edge;
-
     //this is the mask
     float mask = (m > progress) ? 0.0 : 1.0 ;
 
-    //we need two of these
-    float mask0 = mix(mask,mask+edge,1.0 - uEdgeHardness);
-    float mask1 = mix(edge,edge*mask,uEdgeHardness);
+    //pre-color
+    float c =  1.0 - abs(m-progress) ;
+    c = easeInOutSine(c);
+    vec3 color = c * (0.5 + 0.5*cos(progress*uColorSpeed+uv.xyx+vec3(0,2,4)));
 
-    //calculate color
-    vec3 color = cos(progress*uColorSpeed+uv.xyx+vec3(0,2,4)).xyz;
-    //coloroffset 
+
+
+    //offset the Hue
     float colorOffset = (uRandomColorOffset) ? hash12(uSeed) : uColorOffset ;
     color = offsetHue(color, colorOffset);
     //clamp and saturate
     color = clamp(color * uColorSaturation,vec3(0.0),vec3(1.0));
-     
-    //save this for later
+
     float oColorAlpha = oColor.a;
 
     //blur-ify
     if (uBlur > 0.0)
     {
-        //used for blur later ... 
-        //calculate this before saturating it
-        float b = (color.r + color.g + color.b)/3.0;
+        oColor = blur( iTexCoord.st, b * uBlur, 7.0);
 
-        
-        oColor = blur( iTexCoord.st, b * uBlur * mask1, 7.0);
+        if (uBlurBleed)
+        {
+            //allow the blur to bleed from the edges of the window
+        }
+        else
+        {
+            oColor.a = oColorAlpha;
+        }
     }
 
 
-    oColor.a *= mask0;
-    oColor += mask1 * vec4(color.rgb,1.0);
-    oColor.a *= oColorAlpha;
+    
+    //apply the color and the mask
+    oColor.rgb = mix(oColor.rgb, color, color);
+    oColor.a *= mask;
 
     //i want to fade out the last ~10% of the animation
     float lastfade = remap(progress,0.0,uFadeOut,0.0,1.0);
