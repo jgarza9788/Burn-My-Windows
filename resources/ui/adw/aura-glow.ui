@@ -163,6 +163,28 @@ SPDX-License-Identifier: GPL-3.0-or-later
       </object>
     </child>
 
+    <!-- <child>
+      <object class="AdwActionRow">
+        <property name="title" translatable="yes">Adjust For Light Theme</property>
+        <property name="activatable-widget">aura-glow-adjust-light-theme</property>
+        <child>
+          <object class="GtkSwitch" id="aura-glow-adjust-light-theme">
+            <property name="valign">center</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="reset-aura-glow-adjust-light-theme">
+            <property name="icon-name">edit-clear-symbolic</property> 
+            <property name="valign">center</property>
+            <property name="tooltip-text" translatable="yes">Reset to Default Value</property>
+            <style>
+              <class name="flat" />
+            </style>
+          </object>
+        </child>
+      </object>
+    </child> -->
+
     <child>
       <object class="AdwActionRow">
         <property name="title" translatable="yes">Edge Size</property>

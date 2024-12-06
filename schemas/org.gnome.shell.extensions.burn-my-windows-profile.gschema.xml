@@ -891,6 +891,12 @@ SPDX-License-Identifier: CC0-1.0
       <description>Amount of color in the effect</description>
     </key>
 
+    <!-- <key name="aura-glow-adjust-light-theme" type="b">
+      <default>false</default>
+      <summary>Aura Glow Adjust for light theme</summary>
+      <description>darken the window before adding color for light theme</description>
+    </key> -->
+
     <key name="aura-glow-edge-size" type="d">
       <default>1.0</default>
       <summary>Aura Glow Size of the Color Edge</summary>

@@ -58,7 +58,6 @@ uniform float uEdgeSize;
 uniform float uEdgeHardness;
 
 
-
 vec3 offsetHue(vec3 color, float hueOffset) {
     // Convert RGB to HSV
     float maxC = max(max(color.r, color.g), color.b);
@@ -214,23 +213,8 @@ void main() {
         oColor = blur( iTexCoord.st, b * uBlur * mask1, 7.0);
     }
 
-    //apply masks and colors
-    oColor.a *= mask0;
 
-    //i was doing this to try to adjust for light mode
-    // i don;t like the way these make the effect look
-    //      ...maybe a toggle for it later
-    /*
-    float oColorPercent = (oColor.r + oColor.g + oColor.b)/3.0;
-    oColor.r = mix(oColor.r , 1.0 - oColor.r, mask1 * oColorPercent);
-    oColor.g = mix(oColor.g , 1.0 - oColor.g, mask1 * oColorPercent);
-    oColor.b = mix(oColor.b , 1.0 - oColor.b, mask1 * oColorPercent);
-    // --or
-    oColor.r = mix(oColor.r , 0.0, mask1 * oColorPercent);
-    oColor.g = mix(oColor.g , 0.0, mask1 * oColorPercent);
-    oColor.b = mix(oColor.b , 0.0, mask1 * oColorPercent);
-    */
-    
+    oColor.a *= mask0;
     oColor += mask1 * vec4(color.rgb,1.0);
     oColor.a *= oColorAlpha;
 

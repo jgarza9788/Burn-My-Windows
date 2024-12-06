@@ -53,6 +53,7 @@ export default class Effect {
       shader._uFadeOut = shader.get_uniform_location('uFadeOut');
       shader._uSeed    = shader.get_uniform_location('uSeed');
 
+
       // Write all uniform values at the start of each animation.
       shader.connect('begin-animation', (shader, settings) => {
         shader.set_uniform_float(shader._uColorSpeed, 1, [
@@ -88,6 +89,10 @@ export default class Effect {
           settings.get_double('aura-glow-fade-out'),
         ]);
 
+        // shader.set_uniform_float(shader._uLightTheme, 1, [
+        //   Effect.getCurrentThemeMode(),
+        // ]);
+
         // this will be used with a has function to get a random number
         // clang-format off
         shader.set_uniform_float(shader._uSeed,  2, [Math.random(), Math.random()]);
@@ -96,28 +101,7 @@ export default class Effect {
     });
   }
 
-  // static getCurrentThemeMode() {
-  //   const Gtk = imports.gi.Gtk;
-  //   const Gio = imports.gi.Gio;
 
-  //   // Get GSettings theme name
-  //   const settings = new Gio.Settings({ schema: "org.gnome.desktop.interface" });
-  //   const themeName = settings.get_string("gtk-theme");
-
-  //   // Check if the theme name contains "dark"
-  //   if (themeName.toLowerCase().includes("dark")) {
-  //       return "dark";
-  //   }
-
-  //   // Check GTK's dark theme preference
-  //   Gtk.init(null);
-  //   const gtkSettings = Gtk.Settings.get_default();
-  //   if (gtkSettings.gtk_application_prefer_dark_theme) {
-  //       return "dark";
-  //   }
-
-  //   return "light";
-  // }
 
   // ---------------------------------------------------------------------------- metadata
 
