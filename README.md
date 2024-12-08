@@ -30,6 +30,7 @@ This extension is not only more useless than the cube, but it is also much more 
 | Effect                                                                                                                                                                            | Preview                                                                               |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | **Apparition** <br> This effect hides your windows by violently sucking them into the void of magic!                                                                              | <img src ="docs/pics/apparition.gif" />                                               |
+| **Aura Glow** <br> A radiant edge-lit animation                                                                              | <img src ="docs/pics/aura-glow.gif" />                                               |
 | **Broken Glass** <br> Shatter your windows into a shower sharp shards! This effect can be configured so that the shards fly away from your mouse pointer position!                | <img src ="docs/pics/broken-glass.gif" />                                             |
 | **Doom** <br> Melt your windows. Inspired by the legendary screen transitions of the original Doom.                                                                               | <img src ="docs/pics/doom.gif" />                                                     |
 | **Energize A** <br> Beam your windows away!                                                                                                                                       | <img src ="docs/pics/energize-a.gif" />                                               |
@@ -66,6 +67,7 @@ Below is a table which summarizes the current availability for all effects.
 </tr>
 <tr><td></td>                        <td>3.36</td> <td>3.38</td><td>40+</td><td>5.25.0+</td></tr>
 <tr><td>Apparition</td>              <td>  </td>   <td>✅</td>  <td>✅</td> <td>  </td>   </tr>
+<tr><td>Aura Glow</td>               <td>✅</td>   <td>✅</td>  <td>✅</td> <td>✅</td>   </tr>
 <tr><td>Broken Glass</td>            <td>  </td>   <td>  </td>  <td>✅</td> <td>  </td>   </tr>
 <tr><td>Doom</td>                    <td>  </td>   <td>✅</td>  <td>✅</td> <td>✅</td>   </tr>
 <tr><td>Energize A</td>              <td>✅</td>   <td>✅</td>  <td>✅</td> <td>✅</td>   </tr>
