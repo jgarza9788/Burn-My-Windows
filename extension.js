@@ -25,6 +25,7 @@ import * as utils from './src/utils.js';
 import Apparition from './src/effects/Apparition.js';
 import BrokenGlass from './src/effects/BrokenGlass.js';
 import Doom from './src/effects/Doom.js';
+import EightBitPlumber from './src/effects/EightBitPlumber.js';
 import EnergizeA from './src/effects/EnergizeA.js';
 import EnergizeB from './src/effects/EnergizeB.js';
 import Fire from './src/effects/Fire.js';
@@ -71,14 +72,30 @@ export default class BurnMyWindows extends Extension {
 
     // New effects must be registered here and in prefs.js.
     this._ALL_EFFECTS = [
-      new Apparition(), new BrokenGlass(), new Doom(),
-      new EnergizeA(),  new EnergizeB(),   new Fire(),
-      new Focus(),      new Glide(),       new Glitch(),
-      new Hexagon(),    new Incinerate(),  new Matrix(),
-      new PaintBrush(), new Pixelate(),    new PixelWheel(),
-      new PixelWipe(),  new Portal(),      new SnapOfDisintegration(),
-      new TRexAttack(), new TVEffect(),    new TVGlitch(),
-      new Wisps(),      new Mushroom(),
+      new Apparition(),
+      new BrokenGlass(),
+      new Doom(),
+      new EightBitPlumber(),
+      new EnergizeA(),
+      new EnergizeB(),
+      new Fire(),
+      new Focus(),
+      new Glide(),
+      new Glitch(),
+      new Hexagon(),
+      new Incinerate(),
+      new Matrix(),
+      new PaintBrush(),
+      new Pixelate(),
+      new PixelWheel(),
+      new PixelWipe(),
+      new Portal(),
+      new SnapOfDisintegration(),
+      new TRexAttack(),
+      new TVEffect(),
+      new TVGlitch(),
+      new Wisps(),
+      new Mushroom(),
     ];
 
     // Load all of our resources.

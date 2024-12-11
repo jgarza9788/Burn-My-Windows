@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+SPDX-FileCopyrightText: Justin Garza JGarza9788@gmail.com
+SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
+<interface domain="burn-my-windows">
+
+  <!-- Main container for the mushroom preferences section -->
+  <object class="AdwExpanderRow" id="eightbit-plumber-prefs">
+
+    <!-- Animation Time Adjustment Section -->
+    <child>
+      <object class="AdwActionRow">
+        <!-- Title for the animation time adjustment slider -->
+        <property name="title" translatable="yes">Animation Time [ms]</property>
+        <child>
+          <!-- Slider for adjusting animation duration -->
+          <object class="GtkScale">
+            <property name="valign">center</property>
+            <property name="draw-value">1</property> <!-- Display the current value -->
+            <property name="digits">0</property> <!-- Number of decimal places -->
+            <property name="value-pos">left</property> <!-- Position of the displayed value -->
+            <property name="width-request">300</property> <!-- Width of the slider -->
+            <!-- Adjustment settings for the slider -->
+            <property name="adjustment">
+              <object class="GtkAdjustment" id="eightbit-plumber-animation-time">
+                <property name="upper">5000</property> <!-- Maximum value -->
+                <property name="lower">100</property> <!-- Minimum value -->
+                <property name="step-increment">10</property> <!-- Smallest increment -->
+                <property name="page-increment">100</property> <!-- Larger increment -->
+              </object>
+            </property>
+          </object>
+        </child>
+        <!-- Button to reset animation time to its default value -->
+        <child>
+          <object class="GtkButton" id="reset-eightbit-plumber-animation-time">
+            <property name="icon-name">edit-clear-symbolic</property> <!-- Reset icon -->
+            <property name="valign">center</property>
+            <property name="tooltip-text" translatable="yes">Reset to Default Value</property>
+            <style>
+              <class name="flat" /> <!-- Flat button style -->
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+
+  </object>
+
+
+</interface>

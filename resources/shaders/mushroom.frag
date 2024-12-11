@@ -33,23 +33,21 @@
 // The width of the fading effect is loaded from the settings.
 
 // use 8BitStyle or not
-uniform bool u8BitStyle;
+uniform float uScaleStyle;
 
 //these are for the 4 point stars (or sparks)
-uniform bool uEnable4PStars;
-uniform float u4PStars;
-uniform vec4 u4PSColor;
-uniform float u4PSRotation;
+uniform float uSparkCount;
+uniform vec4 uSparkColor;
+uniform float uSparkRotation;
 
 //these are for the Rays
-uniform bool uEnableRays;
 uniform vec4 uRaysColor;
 
 //these are for the 5 pointed stars
-uniform bool uEnable5pStars;
-uniform float uRings;
+uniform float uRingCount;
 uniform float uRingRotation;
-uniform float uStarPerRing;
+uniform float uStarCount;
+
 // and the colors they change over time
 uniform vec4 uStarColor0;
 uniform vec4 uStarColor1;
@@ -281,7 +279,7 @@ vec2 scaleUV(vec2 uv, vec2 scale)
 
 
 
-vec4 get4pStars(vec2 starUV, float progress)
+vec4 getSparks(vec2 starUV, float progress)
 {
   //this will be the result to return 
   vec4 result = vec4(0.0);
@@ -289,7 +287,7 @@ vec4 get4pStars(vec2 starUV, float progress)
   vec2 h = vec2(0.0);
   float y = 0.0;
 
-  for (float x = 0.0; x < u4PStars; ++x) 
+  for (float x = 0.0; x < uSparkCount; ++x) 
   {
       h = hash21(x);
       y = mix( 0.0 - h.y , 1.0+(1.0-h.y) , (1.0 - progress));
@@ -300,12 +298,12 @@ vec4 get4pStars(vec2 starUV, float progress)
         4.0,                                    //nPoints
         0.33,                                   //radiusRatio
         zeroStartEnd(y,0.1 ,4.0),               //Size  
-        progress * 6.28 * float(u4PSRotation)   //rotation
+        progress * 6.28 * float(uSparkRotation)   //rotation
         );
 
       result = alphaOver(
         result,
-        vec4(u4PSColor.r,u4PSColor.g,u4PSColor.b,u4PSColor.a * a4ps)
+        vec4(uSparkColor.r,uSparkColor.g,uSparkColor.b,uSparkColor.a * a4ps)
         );
   }
 
@@ -335,7 +333,7 @@ vec4 getRays(float progress)
 
 }
 
-vec4 get5PStars(vec2 starUV, float aspect, float progress, float oColorAlpha)
+vec4 getStars(vec2 starUV, float aspect, float progress, float oColorAlpha)
 {
   //this will be the result to return 
   vec4 result = vec4(0.0);
@@ -344,19 +342,19 @@ vec4 get5PStars(vec2 starUV, float aspect, float progress, float oColorAlpha)
   float y = 0.0;
 
   //for each ring
-  for (float r = 0.0; r < uRings; ++r) 
+  for (float r = 0.0; r < uRingCount; ++r) 
   {
     
-    float spread = r*(1.0/uRings);
+    float spread = r*(1.0/uRingCount);
     y = mix( 0.0 - spread , 1.0+(1.0-spread) , 1.0 - progress);
     y = clamp(y,0.00001,0.99999);
 
     //each star in each ring
-    for (float s = 0.0; s < uStarPerRing; ++s) 
+    for (float s = 0.0; s < uStarCount; ++s) 
     {
       float a5ps = getStar(
         starUV, 
-        vec2( sin(progress * uRingRotation * 6.28 + (s*(6.28/uStarPerRing))) * aspect * 0.33 , y),  //position (x, y)
+        vec2( sin(progress * uRingRotation * 6.28 + (s*(6.28/uStarCount))) * aspect * 0.33 , y),  //position (x, y)
         5.0,                                                                                            //nPoints
         0.5,                                                                                            //radiusRatio
         zeroStartEnd(y,0.1,2.0),                                                                        //Size   
@@ -365,7 +363,7 @@ vec4 get5PStars(vec2 starUV, float aspect, float progress, float oColorAlpha)
       a5ps = clamp(a5ps,0.0,1.0);
 
       // //put the star in back or the front of the window 
-      float depth = cos(progress * uRingRotation * 6.28 + (s*(6.28/uStarPerRing)) );
+      float depth = cos(progress * uRingRotation * 6.28 + (s*(6.28/uStarCount)) );
       if (depth < 0.0)
       {
         result = alphaOver(result,getStarColor(y,a5ps));
@@ -395,54 +393,45 @@ void main() {
   // Initialize the output color to fully transparent black
   vec4 oColor = vec4(0.0, 0.0, 0.0, 0.0);
 
-  // Check if the 8-bit style is enabled
-  if (u8BitStyle)
+
+  //get scales
+  float scale8bit = eightBitScale(progress);
+  vec2 scaleV2 = vec2(easeInOutSine(progress), easeInQuad(progress));
+
+  vec2 fscale = mix(vec2(scale8bit),scaleV2,uScaleStyle);
+
+  // Fetch the color based on the scaled texture coordinates
+  oColor = getInputColor(
+    scaleUV(iTexCoord.st, fscale)
+  );
+
+  // Store the alpha value of the fetched color for later use
+  float oColorAlpha = oColor.a;
+
+  // Calculate the aspect ratio of the render area
+  float aspect = uSize.x / uSize.y;
+
+  // Transform UV coordinates for star effects
+  vec2 starUV = vec2(iTexCoord.s - 0.5, 1.0 - iTexCoord.t) * vec2(aspect, 1.0);
+
+  // If four-point stars are enabled, overlay them on the current color
+  if (uSparkCount > 0.0)
   {
-    // Scale UV coordinates using a custom 8-bit scaling function
-    float scale8bit = eightBitScale(progress);
-
-    // Fetch the color based on the scaled texture coordinates
-    oColor = getInputColor(
-      scaleUV(iTexCoord.st, vec2(scale8bit, scale8bit))
-    );
+    oColor = alphaOver(oColor, getSparks(starUV, progress));
   }
-  else
+
+  // If rays are enabled, overlay them on the current color
+  if (uRaysColor.a > 0.0)
   {
-    // Non-8-bit style: Calculate scaling factors using easing functions
-    vec2 scaleV2 = vec2(easeInOutSine(progress), easeInQuad(progress));
-
-    // Fetch the color based on the scaled texture coordinates
-    oColor = getInputColor(
-      scaleUV(iTexCoord.st, scaleV2)
-    );
-
-    // Store the alpha value of the fetched color for later use
-    float oColorAlpha = oColor.a;
-
-    // Calculate the aspect ratio of the render area
-    float aspect = uSize.x / uSize.y;
-
-    // Transform UV coordinates for star effects
-    vec2 starUV = vec2(iTexCoord.s - 0.5, 1.0 - iTexCoord.t) * vec2(aspect, 1.0);
-
-    // If four-point stars are enabled, overlay them on the current color
-    if (uEnable4PStars)
-    {
-      oColor = alphaOver(oColor, get4pStars(starUV, progress));
-    }
-
-    // If rays are enabled, overlay them on the current color
-    if (uEnableRays)
-    {
-      oColor = alphaOver(oColor, getRays(progress));
-    }
-
-    // If five-point stars are enabled, overlay them using stored alpha
-    if (uEnable5pStars)
-    {
-      oColor = alphaOver(oColor, get5PStars(starUV, aspect, progress, oColorAlpha));
-    }
+    oColor = alphaOver(oColor, getRays(progress));
   }
+
+  // If five-point stars are enabled, overlay them using stored alpha
+  if (uRingCount > 0.0 && uStarCount > 0.0)
+  {
+    oColor = alphaOver(oColor, getStars(starUV, aspect, progress, oColorAlpha));
+  }
+
 
   // Set the final output color to the computed value
   setOutputColor(oColor);

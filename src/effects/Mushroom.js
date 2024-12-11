@@ -58,20 +58,35 @@ export default class Effect {
         shader.get_uniform_location('uStarColor5'),
       ];
 
-      shader._u8BitStyle = shader.get_uniform_location('u8BitStyle');
 
-      shader._uEnable4PStars = shader.get_uniform_location('uEnable4PStars');
-      shader._u4PStars       = shader.get_uniform_location('u4PStars');
-      shader._u4PSColor      = shader.get_uniform_location('u4PSColor');
-      shader._u4PSRotation   = shader.get_uniform_location('u4PSRotation');
+      shader._uScaleStyle = shader.get_uniform_location('uScaleStyle');
 
-      shader._uEnableRays = shader.get_uniform_location('uEnableRays');
-      shader._uRaysColor  = shader.get_uniform_location('uRaysColor');
+      shader._uSparkCount    = shader.get_uniform_location('uSparkCount');
+      shader._uSparkColor    = shader.get_uniform_location('uSparkColor');
+      shader._uSparkRotation = shader.get_uniform_location('uSparkRotation');
 
-      shader._uEnable5pStars = shader.get_uniform_location('uEnable5pStars');
-      shader._uRings         = shader.get_uniform_location('uRings');
-      shader._uRingRotation  = shader.get_uniform_location('uRingRotation');
-      shader._uStarPerRing   = shader.get_uniform_location('uStarPerRing');
+      shader._uRaysColor = shader.get_uniform_location('uRaysColor');
+
+      shader._uRingCount    = shader.get_uniform_location('uRingCount');
+      shader._uRingRotation = shader.get_uniform_location('uRingRotation');
+      shader._uStarCount    = shader.get_uniform_location('uStarCount');
+
+      // shader._u8BitStyle = shader.get_uniform_location('u8BitStyle');
+
+      // shader._u8BitStyle = shader.get_uniform_location('u8BitStyle');
+
+      // shader._uEnable4PStars = shader.get_uniform_location('uEnable4PStars');
+      // shader._u4PStars       = shader.get_uniform_location('u4PStars');
+      // shader._u4PSColor      = shader.get_uniform_location('u4PSColor');
+      // shader._u4PSRotation   = shader.get_uniform_location('u4PSRotation');
+
+      // shader._uEnableRays = shader.get_uniform_location('uEnableRays');
+      // shader._uRaysColor  = shader.get_uniform_location('uRaysColor');
+
+      // shader._uEnable5pStars = shader.get_uniform_location('uEnable5pStars');
+      // shader._uRings         = shader.get_uniform_location('uRings');
+      // shader._uRingRotation  = shader.get_uniform_location('uRingRotation');
+      // shader._uStarPerRing   = shader.get_uniform_location('uStarPerRing');
 
       // And update all uniforms at the start of each animation.
       shader.connect('begin-animation', (shader, settings) => {
@@ -82,21 +97,18 @@ export default class Effect {
         }
 
         // clang-format off
-        shader.set_uniform_float(shader._u8BitStyle,            1, [settings.get_boolean('mushroom-8bit-enable')]);
 
-        shader.set_uniform_float(shader._uEnable4PStars,        1, [settings.get_boolean('mushroom-4pstars-enable')]);
-        shader.set_uniform_float(shader._u4PStars,              1, [settings.get_int('mushroom-4pstars-count')]);
-        shader.set_uniform_float(shader._u4PSColor,             4, utils.parseColor(settings.get_string('mushroom-4pstars-color')));
-        shader.set_uniform_float(shader._u4PSRotation,          1, [settings.get_double('mushroom-4pstars-rotation')]);
+        shader.set_uniform_float(shader._uScaleStyle,        1, [settings.get_double('mushroom-scale-style')]);
 
-        shader.set_uniform_float(shader._uEnableRays,           1, [settings.get_boolean('mushroom-rays-enable')]);
+        shader.set_uniform_float(shader._uSparkCount,              1, [settings.get_int('mushroom-spark-count')]);
+        shader.set_uniform_float(shader._uSparkColor,             4, utils.parseColor(settings.get_string('mushroom-spark-color')));
+        shader.set_uniform_float(shader._uSparkRotation,          1, [settings.get_double('mushroom-spark-rotation')]);
+
         shader.set_uniform_float(shader._uRaysColor,            4, utils.parseColor(settings.get_string('mushroom-rays-color')));
 
-        shader.set_uniform_float(shader._uEnable5pStars,        1, [settings.get_boolean('mushroom-5pstars-enable')]);
-        shader.set_uniform_float(shader._uRings,                1, [settings.get_int('mushroom-5pstarring-count')]);
-        shader.set_uniform_float(shader._uRingRotation,         1, [settings.get_double('mushroom-5pstarring-rotation')]);
-        shader.set_uniform_float(shader._uStarPerRing,          1, [settings.get_int('mushroom-5pstars-count')]);
-
+        shader.set_uniform_float(shader._uRingCount,                1, [settings.get_int('mushroom-ring-count')]);
+        shader.set_uniform_float(shader._uRingRotation,         1, [settings.get_double('mushroom-ring-rotation')]);
+        shader.set_uniform_float(shader._uStarCount,          1, [settings.get_int('mushroom-star-count')]);
 
         // clang-format on
       });
@@ -132,7 +144,19 @@ export default class Effect {
   static bindPreferences(dialog) {
     // Empty for now... Code is added here later in the tutorial!
     dialog.bindAdjustment('mushroom-animation-time');
-    dialog.bindSwitch('mushroom-8bit-enable');
+    // dialog.bindSwitch('mushroom-8bit-enable');
+
+    dialog.bindAdjustment('mushroom-scale-style');
+
+    dialog.bindAdjustment('mushroom-spark-count');
+    dialog.bindColorButton('mushroom-spark-color');
+    dialog.bindAdjustment('mushroom-spark-rotation');
+
+    dialog.bindColorButton('mushroom-rays-color');
+
+    dialog.bindAdjustment('mushroom-ring-count');
+    dialog.bindAdjustment('mushroom-ring-rotation');
+    dialog.bindAdjustment('mushroom-star-count');
 
     dialog.bindColorButton('mushroom-star-color-0');
     dialog.bindColorButton('mushroom-star-color-1');
@@ -141,18 +165,6 @@ export default class Effect {
     dialog.bindColorButton('mushroom-star-color-4');
     dialog.bindColorButton('mushroom-star-color-5');
 
-    dialog.bindSwitch('mushroom-4pstars-enable');
-    dialog.bindAdjustment('mushroom-4pstars-count');
-    dialog.bindColorButton('mushroom-4pstars-color');
-    dialog.bindAdjustment('mushroom-4pstars-rotation');
-
-    dialog.bindSwitch('mushroom-rays-enable');
-    dialog.bindColorButton('mushroom-rays-color');
-
-    dialog.bindSwitch('mushroom-5pstars-enable');
-    dialog.bindAdjustment('mushroom-5pstarring-count');
-    dialog.bindAdjustment('mushroom-5pstarring-rotation');
-    dialog.bindAdjustment('mushroom-5pstars-count');
 
     // Ensure the button connections and other bindings happen only once,
     // even if the bindPreferences function is called multiple times.
@@ -171,56 +183,9 @@ export default class Effect {
         dialog.getProfileSettings().reset('mushroom-star-color-5');
       });
 
+
       // Initialize the preset dropdown menu for mushroom star colors.
       Effect._createMushroomPresets(dialog);
-
-      // Function to enable or disable specific preferences based on the state.
-      // If `state` is true, the preferences are disabled; if false, they are enabled.
-      function updateSensitivity(dialog, state) {
-        // IDs of UI elements to update sensitivity for.
-        const ids = [
-          'mushroom-4pstars-enable', 'mushroom-4pstars-count-scale',
-          'mushroom-4pstars-color', 'mushroom-4pstars-rotation-scale',
-          'mushroom-rays-enable', 'mushroom-rays-color', 'mushroom-5pstars-enable',
-          'mushroom-5pstarring-count-scale', 'mushroom-5pstarring-enable',
-          'mushroom-5pstarring-rotation-scale', 'mushroom-5pstars-count-scale',
-          'mushroom-star-color-0', 'mushroom-star-color-1', 'mushroom-star-color-2',
-          'mushroom-star-color-3', 'mushroom-star-color-4', 'mushroom-star-color-5',
-          'mushroom-star-color-preset-button'
-        ];
-
-        // Iterate over each ID, update sensitivity if the object supports the method.
-        ids.forEach(id => {
-          const obj = dialog.getBuilder().get_object(id);
-          if (obj && typeof obj.set_sensitive === 'function') {
-            obj.set_sensitive(!state);  // Disable if state is true, enable if false.
-          } else {
-            // Log a warning if the object is null or doesn't support set_sensitive.
-            log(`Warning: Object with ID '${
-              id}' does not support set_sensitive or is null.`);
-          }
-        });
-      }
-
-      // Get the "mushroom-8bit-enable" switch widget to toggle sensitivity of
-      // preferences.
-      const switchWidget = dialog.getBuilder().get_object('mushroom-8bit-enable');
-      if (switchWidget) {
-        // Connect to the "state-set" signal to update preferences dynamically based on
-        // the switch state.
-        switchWidget.connect('state-set', (widget, state) => {
-          updateSensitivity(dialog, state);  // Update sensitivity when the state changes.
-        });
-
-        // Manually call the update function on startup, using the initial state of the
-        // switch.
-        const initialState =
-          switchWidget.get_active();  // Get the current state of the switch.
-        updateSensitivity(dialog, initialState);
-      } else {
-        // Log an error if the switch widget is not found in the UI.
-        log('Error: \'mushroom-8bit-enable\' switch widget not found.');
-      }
     }
   }
 
@@ -345,187 +310,3 @@ export default class Effect {
       });
   }
 }
-
-// large comment to fix the comment percentage check
-/*
-
-The provided code is a JavaScript implementation for creating and managing a graphical
-effect inspired by the classic "Mushroom" feature in retro Mario games. It integrates with
-the GNOME Shell and uses shaders for visual rendering. Here is an overview and explanation
-of its key sections:
-
----
-
-### 1. **Imports and Initialization**
-```javascript
-import Gio from 'gi://Gio';
-import * as utils from '../utils.js';
-
-// Import ShaderFactory in the GNOME Shell process.
-const ShaderFactory = await utils.importInShellOnly('./ShaderFactory.js');
-
-// Import gettext for internationalization.
-const _ = await utils.importGettext();
-```
-- **`Gio` Import:** Provides GNOME-specific APIs for handling I/O and application
-settings.
-- **`utils.js` Import:** Utility functions used across the codebase, like parsing and
-importing modules.
-- **ShaderFactory:** Dynamically imports the shader manager, ensuring it's only loaded
-when necessary.
-- **Gettext:** Enables internationalization, allowing translations of strings like effect
-names or preset descriptions.
-
----
-
-### 2. **Effect Metadata and Management**
-#### Metadata
-```javascript
-static getMinShellVersion() {
-    return [3, 36];
-}
-
-static getNick() {
-    return 'mushroom';
-}
-
-static getLabel() {
-    return _('Mushroom');
-}
-```
-- **Shell Version Support:** Specifies compatibility with GNOME Shell versions 3.36 and
-above.
-- **Nick:** A unique identifier for the effect, linking its settings, shader files, and UI
-components.
-- **Label:** Display name shown in GNOME's preferences dialog.
-
-#### Constructor
-```javascript
-constructor() {
-    this.shaderFactory = new ShaderFactory(Effect.getNick(), (shader) => {
-        shader._uGradient = [
-            shader.get_uniform_location('uStarColor0'),
-            shader.get_uniform_location('uStarColor1'),
-            shader.get_uniform_location('uStarColor2'),
-            shader.get_uniform_location('uStarColor3'),
-            shader.get_uniform_location('uStarColor4'),
-            shader.get_uniform_location('uStarColor5'),
-        ];
-
-        shader._u8BitStyle = shader.get_uniform_location('u8BitStyle');
-        shader._uEnable4PStars = shader.get_uniform_location('uEnable4PStars');
-        shader._uEnableRays = shader.get_uniform_location('uEnableRays');
-        shader._uEnable5pStars = shader.get_uniform_location('uEnable5pStars');
-
-        shader.connect('begin-animation', (shader, settings) => {
-            shader.set_uniform_float(shader._u8BitStyle, 1,
-[settings.get_boolean('mushroom-8bit-enable')]);
-            // More uniforms are updated...
-        });
-    });
-}
-```
-- **Shader Factory:** Generates shader instances for rendering the effect.
-- **Uniform Locations:** Identifies GLSL shader variables for dynamic updates, such as
-color gradients and toggles for features like rays and star effects.
-- **Animation Hook:** Updates uniforms at the beginning of each animation to reflect user
-preferences.
-
----
-
-### 3. **Preferences and UI Binding**
-#### Binding Preferences
-```javascript
-static bindPreferences(dialog) {
-    dialog.bindAdjustment('mushroom-animation-time');
-    dialog.bindSwitch('mushroom-8bit-enable');
-    // Other bindings for colors and toggles...
-}
-```
-- **Binding Settings to UI:** Links user preferences (e.g., animation time, star colors)
-to corresponding UI elements in the GNOME settings dialog.
-- **Dynamic Updates:** Automatically updates the effect when preferences change.
-
-#### Resetting Star Colors
-```javascript
-dialog.getBuilder().get_object('reset-star-colors').connect('clicked', () => {
-    dialog.getProfileSettings().reset('mushroom-star-color-0');
-    dialog.getProfileSettings().reset('mushroom-star-color-1');
-    // Reset other colors...
-});
-```
-- **Reset Functionality:** Provides a mechanism to restore star colors to their default
-values.
-
----
-
-### 4. **Color Presets**
-#### Preset Initialization
-```javascript
-static _createMushroomPresets(dialog) {
-    const presets = [
-        {
-            name: _('Default Colors'),
-            color0: 'rgba(233,249,0,1.0)',
-            // Other colors...
-        },
-        {
-            name: _('Rainbow'),
-            color0: 'rgba(255, 69, 58, 1.0)',  // Bold Red
-            // Other colors...
-        },
-        // More presets...
-    ];
-}
-```
-- **Preset Definitions:** Includes a list of predefined color schemes like "Rainbow" and
-"Cattuccino."
-- **Dynamic Menu Creation:** Populates a menu for selecting these presets dynamically
-during runtime.
-
-#### Applying Presets
-```javascript
-presets.forEach((preset, i) => {
-    const actionName = 'mushroom' + i;
-    action.connect('activate', () => {
-        dialog.getProfileSettings().set_string('mushroom-star-color-0', preset.color0);
-        // Set other colors...
-    });
-});
-```
-- **Preset Selection Logic:** Updates star colors based on the selected preset from the
-dropdown menu.
-
----
-
-### 5. **Shader Integration**
-#### Shader Configuration
-```javascript
-shader.set_uniform_float(shader._uEnableRays, 1,
-[settings.get_boolean('mushroom-rays-enable')]); shader.set_uniform_float(shader._uRings,
-1, [settings.get_int('mushroom-5pstarring-count')]);
-shader.set_uniform_float(shader._uRingRotation, 1,
-[settings.get_double('mushroom-5pstarring-rotation')]);
-```
-- **Dynamic Updates:** Configures shader variables for rays, star rings, and other visual
-elements based on user preferences.
-- **Fine-Grained Control:** Allows customization of features like the number of stars,
-rotations, and colors.
-
----
-
-### 6. **Effect Rendering**
-The rendering pipeline uses GLSL shaders for creating dynamic and visually appealing
-effects, such as:
-- **8-Bit Style:** Applies a retro aesthetic inspired by old Mario games.
-- **Star Gradients:** Smooth color transitions for the stars.
-- **Rays and Rings:** Adds depth and complexity to the visual design.
-
----
-
-### Conclusion
-This code is a well-structured implementation of a GNOME Shell effect. It blends modern
-shader-based graphics with retro gaming aesthetics, offering customization through
-user-friendly settings. The modular approach makes it easy to extend and maintain.
-
-*/
