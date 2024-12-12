@@ -906,7 +906,6 @@ SPDX-License-Identifier: CC0-1.0
       <description>The Sparks Color</description>
     </key>
 
-    <!-- semi-hardcoded for now -->
     <key name="mushroom-spark-rotation" type="d">
       <default>0.3</default>
       <summary>The Number of Rotations the Sparks do</summary>

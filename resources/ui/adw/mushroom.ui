@@ -48,34 +48,6 @@ SPDX-License-Identifier: GPL-3.0-or-later
       </object>
     </child>
 
-    <!-- 8Bit Style Toggle Section -->
-    <!-- <child>
-      <object class="AdwActionRow">
-        
-        <property name="title" translatable="yes">8Bit Style</property>
-        <property name="subtitle" translatable="yes">If ON an old 8Bit Style will be used</property>
-        
-        <property name="activatable-widget">mushroom-8bit-enable</property>
-        <child>
-          <object class="GtkSwitch" id="mushroom-8bit-enable">
-            <property name="valign">center</property>
-          </object>
-        </child>
-        
-        <child>
-          <object class="GtkButton" id="reset-mushroom-8bit-enable">
-            <property name="icon-name">edit-clear-symbolic</property> 
-            <property name="valign">center</property>
-            <property name="tooltip-text" translatable="yes">Reset to Default Value</property>
-            <style>
-              <class name="flat" />
-            </style>
-          </object>
-        </child>
-      </object>
-    </child> -->
-
-
     <child>
       <object class="AdwActionRow">
         
@@ -141,6 +113,44 @@ SPDX-License-Identifier: GPL-3.0-or-later
         
         <child>
           <object class="GtkButton" id="reset-mushroom-spark-count">
+            <property name="icon-name">edit-clear-symbolic</property> 
+            <property name="valign">center</property>
+            <property name="tooltip-text" translatable="yes">Reset to Default Value</property>
+            <style>
+              <class name="flat" />
+            </style>
+          </object>
+        </child>
+      </object>
+    </child>
+
+    <!-- Adjustment for 4-Point Stars Count -->
+    <child>
+      <object class="AdwActionRow">
+        
+        <property name="title" translatable="yes">Spark Rotation</property>
+        
+        <child>
+          <object class="GtkScale" >
+            <property name="valign">center</property>
+            <property name="draw-value">1</property>
+            <property name="digits">2</property>
+            <property name="value-pos">left</property>
+            <property name="width-request">300</property>
+            
+            <property name="adjustment">
+              <object class="GtkAdjustment" id="mushroom-spark-rotation">
+                <property name="upper">3.0</property> 
+                <property name="lower">-3.0</property> 
+                <property name="step-increment">0.5</property> 
+                <property name="page-increment">0.25</property> 
+              </object>
+            </property>
+          </object>
+        </child>
+        
+        <child>
+          <object class="GtkButton" id="reset-mushroom-spark-rotation">
             <property name="icon-name">edit-clear-symbolic</property> 
             <property name="valign">center</property>
             <property name="tooltip-text" translatable="yes">Reset to Default Value</property>
