@@ -32,10 +32,10 @@
 
 // The width of the fading effect is loaded from the settings.
 
-// use 8BitStyle or not
+// use 8BitStyle or not (sliding scale)
 uniform float uScaleStyle;
 
-//these are for the 4 point stars (or sparks)
+//these are for the sparks
 uniform float uSparkCount;
 uniform vec4 uSparkColor;
 uniform float uSparkRotation;
@@ -43,7 +43,7 @@ uniform float uSparkRotation;
 //these are for the Rays
 uniform vec4 uRaysColor;
 
-//these are for the 5 pointed stars
+//these are for the stars
 uniform float uRingCount;
 uniform float uRingRotation;
 uniform float uStarCount;
@@ -56,6 +56,9 @@ uniform vec4 uStarColor3;
 uniform vec4 uStarColor4;
 uniform vec4 uStarColor5;
 
+//seed
+uniform vec2 uSeed;
+
 //helps to find the angle
 vec3 getPosByAngle(float angle)
 {
@@ -63,6 +66,7 @@ vec3 getPosByAngle(float angle)
 }
 
 
+//gets the mask of a Star
 float getStar(vec2 uv, vec2 center, float npoints, float radiusRatio, float size, float rotation)
 {
 
@@ -118,6 +122,7 @@ vec2 scaleUV(vec2 uv, vec2 scale)
 }
 
 //rotates the UV
+//needs to use this once since it rotates around the middle (i.e. 0.5)
 vec2 rotateUV(vec2 uv, float rotation)
 {
     float mid = 0.5;
@@ -127,6 +132,7 @@ vec2 rotateUV(vec2 uv, float rotation)
     );
 }
 
+//this returns the Spark
 float getSpark(vec2 uv, vec2 center, float brightness, float size, float rotation)
 {
   brightness = clamp(brightness,0.001,1.0);
@@ -158,6 +164,7 @@ float getSpark(vec2 uv, vec2 center, float brightness, float size, float rotatio
 }
 
 
+//returns the star's color
 vec4 getStarColor(float v, float alpha) {
     // Clamp v to ensure it's in [0.0, 1.0]
     v = clamp(v, 0.0, 1.0);
@@ -207,8 +214,6 @@ vec4 getStarColor(float v, float alpha) {
 
 
 
-float zeroStartEnd(float t, float max_size, float power)
-{
 // 1|    __________
 //  |   /          \
 //  |  /            \
@@ -220,13 +225,11 @@ graph above ... where t is close to 0, or 1 the result will fade to zero
 i.e. this is just the function of power(x,p) shifted
 where x is time, and p is 2.0,4.0,8.0,10.0 ... or any positive even number
 */
-
-
-  
+float zeroStartEnd(float t, float max_size, float power)
+{
   float s = -1.0 * pow((t-0.5)/(0.5),power)+1.0;
   s = clamp(s,0.0,1.0) * max_size;
   return s;
-
 }
 
 //this gives us the jerky 8bit growth effect.
@@ -273,7 +276,7 @@ float eightBitScale(float progress)
 }
 
 
-
+//gets all the sparks
 vec4 getSparks(float progress)
 {
   //the UV for this function
@@ -283,22 +286,27 @@ vec4 getSparks(float progress)
   //this will be the result to return 
   vec4 result = vec4(0.0);
 
-  vec2 h = vec2(0.0);
-  float y = 0.0;
-  float x = 0.0;
-
+  // 0 at the edges
   float xEdge = -1.0 * pow((uv.x-(aspect*0.5))/(aspect*0.5),8.0)+1.0;
   xEdge = clamp(xEdge,0.0,1.0);
 
+  //declare some variables before the loop
+  vec2 h = vec2(0.0); 
+  float y = 0.0;
+  float x = 0.0;
+
+  //loop for each spart
   for (float xusp = 0.0; xusp < uSparkCount; ++xusp) 
   {
-      h = hash21(xusp);
+      //calculate some variables
+      h = hash21(xusp + uSeed.x);
       y = mix( 0.0 - h.y , 1.0+(1.0-h.y) , progress);
       y = clamp(y,0.0,1.0);
 
       x = 0.66 * sin(h.x * 6.28) ;
       x += 0.5 * aspect;
 
+      //here we get the mask for the spark
       float a4ps = getSpark(
         uv, 
         vec2( x , y),      //position (x, y)
@@ -307,7 +315,7 @@ vec4 getSparks(float progress)
         progress * 6.28 * float(uSparkRotation)   //rotation
         );
 
-
+      //set it to the results
       result = alphaOver(
         result,
         vec4(uSparkColor.r,uSparkColor.g,uSparkColor.b,uSparkColor.a * a4ps)
@@ -318,17 +326,24 @@ vec4 getSparks(float progress)
   return result;
 }
 
+//gets the Rays
 vec4 getRays(float progress)
 {
+  //create the UV for it
   vec2 rayUV = iTexCoord.st;
   rayUV *= vec2(10.0,0.5);
   rayUV.y += progress * -1.0;
+  rayUV.x += uSeed.y;
   
+  //gets the ray 
   float ray = simplex2D(rayUV);
+  //0 around the edges 
   ray *= zeroStartEnd(iTexCoord.t,1.0,8.0);
+  ray *= zeroStartEnd(iTexCoord.s,1.0,8.0);
+  // 0 at the begining and end of the animation
   ray *= zeroStartEnd(progress,1.0,8.0);
 
-
+  //adjust the numbers and clamp
   ray = remap(
     ray * 1.10,
     0.0,1.0,
@@ -336,10 +351,12 @@ vec4 getRays(float progress)
   );
   ray = clamp(ray,0.0,1.0);
 
+  //return
   return vec4(uRaysColor.r,uRaysColor.g,uRaysColor.b,uRaysColor.a * ray);
 
 }
 
+//returns the stars
 vec4 getStars(vec2 starUV, float aspect, float progress, float oColorAlpha)
 {
   //this will be the result to return 

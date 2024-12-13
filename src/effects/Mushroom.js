@@ -33,8 +33,9 @@ const ShaderFactory = await utils.importInShellOnly('./ShaderFactory.js');
 const _ = await utils.importGettext();
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// This effect was obviously inspired my the 8bit mario video games of old, specifically//
-// when mario gets the mushroom. i hope you enjoy this little blast from the past.      //
+//This effect is inspired by the old 8bit mario video games and the New Super Mario     //
+//Bros 2 specifically when mario gets the mushroom. i hope you enjoy this little blast  //
+//from the past.                                                                        //
 //////////////////////////////////////////////////////////////////////////////////////////
 
 // The effect class can be used to get some metadata (like the effect's name or supported
@@ -71,22 +72,7 @@ export default class Effect {
       shader._uRingRotation = shader.get_uniform_location('uRingRotation');
       shader._uStarCount    = shader.get_uniform_location('uStarCount');
 
-      // shader._u8BitStyle = shader.get_uniform_location('u8BitStyle');
-
-      // shader._u8BitStyle = shader.get_uniform_location('u8BitStyle');
-
-      // shader._uEnable4PStars = shader.get_uniform_location('uEnable4PStars');
-      // shader._u4PStars       = shader.get_uniform_location('u4PStars');
-      // shader._u4PSColor      = shader.get_uniform_location('u4PSColor');
-      // shader._u4PSRotation   = shader.get_uniform_location('u4PSRotation');
-
-      // shader._uEnableRays = shader.get_uniform_location('uEnableRays');
-      // shader._uRaysColor  = shader.get_uniform_location('uRaysColor');
-
-      // shader._uEnable5pStars = shader.get_uniform_location('uEnable5pStars');
-      // shader._uRings         = shader.get_uniform_location('uRings');
-      // shader._uRingRotation  = shader.get_uniform_location('uRingRotation');
-      // shader._uStarPerRing   = shader.get_uniform_location('uStarPerRing');
+      shader._uSeed    = shader.get_uniform_location('uSeed');
 
       // And update all uniforms at the start of each animation.
       shader.connect('begin-animation', (shader, settings) => {
@@ -109,6 +95,8 @@ export default class Effect {
         shader.set_uniform_float(shader._uRingCount,                1, [settings.get_int('mushroom-ring-count')]);
         shader.set_uniform_float(shader._uRingRotation,         1, [settings.get_double('mushroom-ring-rotation')]);
         shader.set_uniform_float(shader._uStarCount,          1, [settings.get_int('mushroom-star-count')]);
+
+        shader.set_uniform_float(shader._uSeed,  2, [Math.random(), Math.random()]);
 
         // clang-format on
       });
