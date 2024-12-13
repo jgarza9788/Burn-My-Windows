@@ -379,7 +379,10 @@ float getWinding(vec2 a, vec2 b) { return cross(vec3(a, 0.0), vec3(b, 0.0)).z; }
 
 // Rotates the given 2D vector a clockwise by the angle alpha (given in radians).
 vec2 rotate(vec2 a, float angle) {
-  return vec2(a.x * cos(angle) - a.y * sin(angle), a.x * sin(angle) + a.y * cos(angle));
+  return vec2(
+    a.x * cos(angle) - a.y * sin(angle), 
+    a.x * sin(angle) + a.y * cos(angle)
+    );
 }
 
 // --------------------------------------------------------------------------------- noise
@@ -583,6 +586,8 @@ float simplex3DFractal(vec3 m) {
   return 0.5333333 * simplex3D(m * rot1) + 0.2666667 * simplex3D(2.0 * m * rot2) +
          0.1333333 * simplex3D(4.0 * m * rot3) + 0.0666667 * simplex3D(8.0 * m);
 }
+
+
 
 
 // --------------------------------------------------------------------------------- remap 
