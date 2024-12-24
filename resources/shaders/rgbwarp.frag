@@ -61,33 +61,59 @@ void main() {
   // If opening, use uProgress as-is; if closing, invert the progression.
   float progress = uForOpening ? uProgress : 1.0 - uProgress;
 
+  //progress will now go from 0.5 to 1.0
+  progress = mix(0.5,1.0,progress);
+
   // the UV
   vec2 uv = iTexCoord.st;
+  vec2 f = vec2(uv.x,1.0 - uv.y);
 
   float w = 0.0;
 
   float p = mix(0.0, 1.0 + uWavesize, progress);
-  w = 1.0 - abs(p-uv.y);
+  w = 1.0 - abs(p -  f.y);
   w = clamp(w,0.0,1.0);
 
 
   w = pow(w, mix(100.0,1.0,uWavesize) );
 
-  float mask = 1.0;
-  if (p-uv.y < 0.0)
+  // float mask = 1.0;
+  if (p -  f.y < 0.0)
   {
-    mask = 0.0;
+    // mask = 0.0;
     w = 0.0;
   }
 
   vec4 oColor = vec4(0.0);
 
-  oColor.r = getInputColor(uv - vec2(0.0,w * uStretchR) ).r * mix(1.0, uBrightness, FadeInOut(progress,4));
-  oColor.g = getInputColor(uv - vec2(0.0,w * uStretchG) ).g * mix(1.0, uBrightness, FadeInOut(progress,4));
-  oColor.b = getInputColor(uv - vec2(0.0,w * uStretchB) ).b * mix(1.0, uBrightness, FadeInOut(progress,4));
+  oColor.r = getInputColor(uv + vec2(0.0,w * uStretchR ) ).r * mix(1.0, uBrightness, FadeInOut(progress,4));
+  oColor.g = getInputColor(uv + vec2(0.0,w * uStretchG ) ).g * mix(1.0, uBrightness, FadeInOut(progress,4));
+  oColor.b = getInputColor(uv + vec2(0.0,w * uStretchB ) ).b * mix(1.0, uBrightness, FadeInOut(progress,4));
 
   // float stretchA = min(min(uStretchR,uStretchG),uStretchB);
-  oColor.a = getInputColor(uv).a * mask * (1.0 - w);
+  // oColor.a = getInputColor(uv).a * mask * (1.0 - w);
+
+  // float mask = (oColor.r + oColor.g + oColor.b)/3.0;
+  // float mask = max(max(oColor.r,oColor.g),oColor.b);
+  // oColor.a = getInputColor(uv).a * progress;
+
+  //this will not work well on very dark themes
+  // float mask = (oColor.r + oColor.g + oColor.b)/3.0;
+  // if (mask >  0.0)
+  // {
+  //   oColor.a = getInputColor(uv).a;
+  // }
+
+
+  oColor.a = getInputColor(uv).a * easeInOutExpo(progress);
+    
+
+
+
+  // float a = getInputColor(uv).a * easeOutExpo(progress);
+  // oColor.a = clamp(a,0.0,1.0);
+
+  // oColor.a = getInputColor(uv).a ;
 
 
   // oColor.a = mask * getInputColor(uv).a * cmax ;
