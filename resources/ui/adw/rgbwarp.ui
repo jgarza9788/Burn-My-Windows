@@ -103,7 +103,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
             
             <property name="adjustment">
               <object class="GtkAdjustment" id="rgbwarp-brightness">
-                <property name="upper">5.0</property> 
+                <property name="upper">2.0</property> 
                 <property name="lower">0.0</property> 
                 <property name="step-increment">0.1</property> 
                 <property name="page-increment">0.25</property> 
@@ -141,7 +141,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
             
             <property name="adjustment">
               <object class="GtkAdjustment" id="rgbwarp-offset-r">
-                <property name="upper">0.5</property> 
+                <property name="upper">1.0</property> 
                 <property name="lower">0.0</property> 
                 <property name="step-increment">0.01</property> 
                 <property name="page-increment">0.1</property> 
@@ -179,7 +179,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
             
             <property name="adjustment">
               <object class="GtkAdjustment" id="rgbwarp-offset-g">
-                <property name="upper">0.5</property> 
+                <property name="upper">1.0</property> 
                 <property name="lower">0.0</property> 
                 <property name="step-increment">0.01</property> 
                 <property name="page-increment">0.1</property> 
@@ -217,7 +217,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
             
             <property name="adjustment">
               <object class="GtkAdjustment" id="rgbwarp-offset-b">
-                <property name="upper">0.5</property> 
+                <property name="upper">1.0</property> 
                 <property name="lower">0.0</property> 
                 <property name="step-increment">0.01</property> 
                 <property name="page-increment">0.1</property> 

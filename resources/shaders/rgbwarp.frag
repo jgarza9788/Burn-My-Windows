@@ -82,9 +82,9 @@ void main() {
 
   vec4 oColor = vec4(0.0);
 
-  oColor.r = getInputColor(uv + vec2(0.0,w * uStretchR) ).r * mix(1.0, uBrightness, FadeInOut(progress,4));
-  oColor.g = getInputColor(uv + vec2(0.0,w * uStretchG) ).g * mix(1.0, uBrightness, FadeInOut(progress,4));
-  oColor.b = getInputColor(uv + vec2(0.0,w * uStretchB) ).b * mix(1.0, uBrightness, FadeInOut(progress,4));
+  oColor.r = getInputColor(uv - vec2(0.0,w * uStretchR) ).r * mix(1.0, uBrightness, FadeInOut(progress,4));
+  oColor.g = getInputColor(uv - vec2(0.0,w * uStretchG) ).g * mix(1.0, uBrightness, FadeInOut(progress,4));
+  oColor.b = getInputColor(uv - vec2(0.0,w * uStretchB) ).b * mix(1.0, uBrightness, FadeInOut(progress,4));
 
   // float stretchA = min(min(uStretchR,uStretchG),uStretchB);
   oColor.a = getInputColor(uv).a * mask * (1.0 - w);
