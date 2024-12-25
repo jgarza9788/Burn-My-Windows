@@ -1051,7 +1051,7 @@ SPDX-License-Identifier: CC0-1.0
     </key>
 
     <key name="rgbwarp-wavesize" type="d">
-      <default>0.5</default>
+      <default>1.0</default>
       <summary>RGBWarp Width</summary>
       <description>Width of the effect.</description>
     </key>
@@ -1063,19 +1063,19 @@ SPDX-License-Identifier: CC0-1.0
     </key>
 
     <key name="rgbwarp-offset-r" type="d">
-      <default>0.30</default>
+      <default>1.0</default>
       <summary>RGBWarp Red Offset</summary>
       <description>Red offset of the effect.</description>
     </key>
 
     <key name="rgbwarp-offset-g" type="d">
-      <default>0.20</default>
+      <default>0.80</default>
       <summary>RGBWarp Green Offset</summary>
       <description>Green offset of the effect.</description>
     </key>
 
     <key name="rgbwarp-offset-b" type="d">
-      <default>0.10</default>
+      <default>0.60</default>
       <summary>RGBWarp Blue Offset</summary>
       <description>Blue offset of the effect.</description>
     </key>
