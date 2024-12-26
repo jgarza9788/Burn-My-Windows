@@ -77,10 +77,10 @@ void main() {
 
   w = pow(w, mix(100.0,1.0,uWavesize) );
 
-  // float mask = 1.0;
+  float mask = 1.0;
   if (p -  f.y < 0.0)
   {
-    // mask = 0.0;
+    mask = 0.0;
     w = 0.0;
   }
 
@@ -105,17 +105,11 @@ void main() {
   // }
 
 
-  oColor.a = getInputColor(uv).a * easeInOutExpo(progress);
+  oColor.a = getInputColor(uv).a * easeInOutSine(progress) * mask;
     
-
-
-
   // float a = getInputColor(uv).a * easeOutExpo(progress);
   // oColor.a = clamp(a,0.0,1.0);
-
   // oColor.a = getInputColor(uv).a ;
-
-
   // oColor.a = mask * getInputColor(uv).a * cmax ;
 
   setOutputColor(oColor);

@@ -103,7 +103,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
             
             <property name="adjustment">
               <object class="GtkAdjustment" id="rgbwarp-brightness">
-                <property name="upper">2.0</property> 
+                <property name="upper">1.0</property> 
                 <property name="lower">0.0</property> 
                 <property name="step-increment">0.1</property> 
                 <property name="page-increment">0.25</property> 
