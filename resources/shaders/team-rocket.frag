@@ -37,7 +37,8 @@ uniform float uXpos;
 uniform float uYpos;
 uniform float uSparkleRot;
 uniform float uSparkleSize;
-
+uniform bool uWinRot;
+uniform vec2 uSeed;
 
 //use to scale the window
 vec2 scaleUV(vec2 uv, vec2 scale, vec2 centerOffset)
@@ -56,14 +57,18 @@ vec2 scaleUV(vec2 uv, vec2 scale, vec2 centerOffset)
   return uv;
 }
 
+
 //this returns the Spark
 float getSpark(vec2 uv, vec2 center, float brightness, float size, float rotation)
 {
+  //the brightness of the spark
   brightness = clamp(brightness,0.001,1.0);
+  //the size 
   size = clamp(size,0.001,1.0);
+
   float bn = mix(0.0,0.07,brightness); //recalculate size
   
-  uv = (uv + vec2(0.5)) ;
+  uv = (uv + vec2(0.5)) ; //set center 
   uv = (uv - center) ;//Center UV coordinates, then scale to fit the star size
   uv = scaleUV(uv, vec2(1.0 - size), vec2(0.0));
   uv = rotate(uv, rotation, vec2(0.5)); //rotate the UV
@@ -79,21 +84,35 @@ float getSpark(vec2 uv, vec2 center, float brightness, float size, float rotatio
       )
       );
 
-  
+  //calcuate and return this mask
   float mask = easeInSine(1.0 - (m - bn)) - 0.004 ;
   mask = clamp(mask,0.0,1.0);
-  
   return mask;
   
 }
 
 
+//fades out at 0 and 1 ...based on the power 
+// 1|    __________
+//  |   /          \
+//  |  /            \
+//  | /              \ 
+//  |/                \
+// 0|0.................1
+/*
+graph above ... where t is close to 0, or 1 the result will fade to zero
+i.e. this is just the function of power(x,p) shifted
+where x is time, and p is 2.0,4.0,8.0,10.0 ... or any positive even number
+*/
 float FadeInOut(float t, float power)
 {
   float s = -1.0 * pow((t-0.5)/(0.5),power)+1.0;
   s = clamp(s,0.0,1.0);
   return s;
 }
+
+//2x pi ... don't think too much about it
+float TAU = 6.28;
 
 void main() {
   // Calculate the progression value based on the animation direction.
@@ -103,36 +122,66 @@ void main() {
   // scale progress ... the first half of the animation
   float scalep = remap(
     progress,
-    0.0,0.5,
+    0.0,0.6, 
     0.0,1.0
     );
-  // float scalep = progress;
+
   scalep = easeInOutQuad(scalep);
 
  // sparkle progress ... the second half of the animation
   float sparkp = remap(
     progress,
-    0.5,1.0,
+    0.4,1.0,
     0.0,1.0
     );
   sparkp = easeInOutSine(sparkp);
 
+  /*
+  the window will scale between 0.0 and 0.6 (of the progress)
+  the sparkle will bet between 0.4 and 1.0 (of the progress)
+  ... so there is a tab bit of over lap
+  */
+
   // // this is the offset of the window... don't let them go too far each way
-  vec2 offset = vec2(uXpos,uYpos*-1.0) * 0.33;
+  vec2 offset = vec2(uXpos,uYpos*-1.0) * 0.20;
   vec2 scaleOffset = mix(vec2(0.0),offset,scalep);
 
   //the UV for this function
   float aspect = uSize.x / uSize.y;
   vec2 uv = iTexCoord.st * vec2(aspect,1.0);
+  
+  //get and adjust 
+  vec2 uv2 = iTexCoord.st;
+  uv2 = uv2 * 2.0 - 1.0;
 
-  vec2 v2 = scaleUV(
-    iTexCoord.st,
-    vec2(scalep,scalep),
-    scaleOffset / vec2(aspect,1.0)
-  );
+  //offset 
+  uv2 -= ( scaleOffset/ vec2(aspect,1.0) ) *scalep;
 
-  vec4 oColor = getInputColor( v2) ;
+  //scale
+  uv2 /= mix(1.0, 0.0, scalep);
 
+  //rotation and if we are gonna rotate or not
+  vec3 rot = vec3(0.0);
+  if (uWinRot)
+  {
+    rot = hash32(uSeed);
+    rot *= 2.0;
+    rot -= 1.0;
+    rot *= 0.1;
+  }
+
+  //rotate around x, y , and z
+  uv2.x /= mix(1.0, rot.x * TAU * uv2.y, scalep);
+  uv2.y /= mix(1.0, rot.y * TAU * uv2.x, scalep);
+  uv2 = rotate(uv2,rot.z*TAU*scalep);
+  
+  //re-center
+  uv2 = uv2 * 0.5 + 0.5;
+
+  //gets the window
+  vec4 oColor = getInputColor( uv2) ;
+
+  //the sparksize will bet between 25.0 and 50.0
   float size = mix(25.0,50.0,uSparkleSize);
 
   //get the sparkle
@@ -141,7 +190,7 @@ void main() {
       offset + vec2(0.5 * aspect,0.5),
       FadeInOut(sparkp,2) * uSparkleSize,
       FadeInOut(sparkp,2) * size,
-      sparkp * 6.28 * float(uSparkleRot)
+      sparkp * TAU * float(uSparkleRot)
       );
   //fade out at the edges
   sparkle *= FadeInOut(iTexCoord.t,8);
@@ -153,5 +202,6 @@ void main() {
     vec4(1.0,1.0,1.0,sparkle)
     );
 
+  //output the color
   setOutputColor(oColor);
 }

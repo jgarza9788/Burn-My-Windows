@@ -1107,6 +1107,12 @@ SPDX-License-Identifier: CC0-1.0
       <summary>Team Rocket Y</summary>
       <description>Y position</description>
     </key>
+
+    <key name="team-rocket-win-rot" type="b">
+      <default>false</default>
+      <summary>Rotate the Window</summary>
+      <description>Rotate the Window</description>
+    </key>
     
     <key name="team-rocket-sparkle-rot" type="d">
       <default>0.33</default>
@@ -1115,7 +1121,7 @@ SPDX-License-Identifier: CC0-1.0
     </key>
 
     <key name="team-rocket-sparkle-size" type="d">
-      <default>0.33</default>
+      <default>0.75</default>
       <summary>Sparkle Size</summary>
       <description>Sparkle Size</description>
     </key>

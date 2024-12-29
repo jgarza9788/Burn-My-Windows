@@ -41,8 +41,11 @@ export default class Effect {
       // Store uniform locations of newly created shaders.
       shader._uXpos        = shader.get_uniform_location('uXpos');
       shader._uYpos        = shader.get_uniform_location('uYpos');
+      shader._uWinRot      = shader.get_uniform_location('uWinRot');
       shader._uSparkleRot  = shader.get_uniform_location('uSparkleRot');
       shader._uSparkleSize = shader.get_uniform_location('uSparkleSize');
+
+      shader._uSeed    = shader.get_uniform_location('uSeed');
 
       // Write all uniform values at the start of each animation.
       shader.connect('begin-animation', (shader, settings) => {
@@ -54,6 +57,9 @@ export default class Effect {
           settings.get_double('team-rocket-y'),
         ]);
 
+        shader.set_uniform_float(shader._uWinRot, 1,
+          [settings.get_boolean('team-rocket-win-rot')]);
+
         shader.set_uniform_float(shader._uSparkleRot, 1, [
           settings.get_double('team-rocket-sparkle-rot'),
         ]);
@@ -61,6 +67,10 @@ export default class Effect {
         shader.set_uniform_float(shader._uSparkleSize, 1, [
           settings.get_double('team-rocket-sparkle-size'),
         ]);
+
+        // this will be used with a has function to get a random number
+        // clang-format off
+        shader.set_uniform_float(shader._uSeed,  2, [Math.random(), Math.random()]);
       });
     });
   }
@@ -97,6 +107,9 @@ export default class Effect {
     dialog.bindAdjustment('team-rocket-animation-time');
     dialog.bindAdjustment('team-rocket-x');
     dialog.bindAdjustment('team-rocket-y');
+
+    dialog.bindSwitch('team-rocket-win-rot');
+
     dialog.bindAdjustment('team-rocket-sparkle-rot');
     dialog.bindAdjustment('team-rocket-sparkle-size');
   }
