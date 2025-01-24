@@ -135,6 +135,48 @@ export default class Effect {
       // Initialize the fire-preset dropdown.
       Effect._createFirePresets(dialog);
     }
+
+    // enables and disables the color buttons
+    function EnableDisableColorButtons(dialog, state) {
+      // 😇 hey look dev, this could be a loop!
+      /*
+      dialog.getBuilder().get_object('fire-color-1').set_sensitive(!state);
+      dialog.getBuilder().get_object('fire-color-2').set_sensitive(!state);
+      dialog.getBuilder().get_object('fire-color-3').set_sensitive(!state);
+      dialog.getBuilder().get_object('fire-color-4').set_sensitive(!state);
+      dialog.getBuilder().get_object('fire-color-5').set_sensitive(!state);
+      */
+
+      // 😈 ok fine, i'll make it a &^%$# loop!
+      for (let i = 1; i <= 5; i++) {
+        dialog.getBuilder().get_object('fire-color-' + i).set_sensitive(!state);
+      }
+
+      // 😈 Happy?
+      // 😇 yeah, and we got more comments by doing this skit
+      // 😈 yeah... we even might have made someone smile.
+      // 😇 i don't think so, even if they did they wouldn't post about it on twitter/X
+      // and tag @jgarza9788
+    }
+
+    const switchWidget = dialog.getBuilder().get_object('fire-random-color');
+    if (switchWidget) {
+      // Connect to the "state-set" signal to update preferences dynamically based on
+      // the switch state.
+      switchWidget.connect('state-set', (widget, state) => {
+        EnableDisableColorButtons(dialog,
+                                  state);  // Update sensitivity when the state changes.
+      });
+
+      // Manually call the update function on startup, using the initial state of the
+      // switch.
+      const initialState =
+        switchWidget.get_active();  // Get the current state of the switch.
+      EnableDisableColorButtons(dialog, initialState);
+    } else {
+      // Log an error if the switch widget is not found in the UI.
+      log('Error: \'fire-random-color\' switch widget not found.');
+    }
   }
 
   // ---------------------------------------------------------------- API for extension.js
