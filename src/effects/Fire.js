@@ -12,6 +12,8 @@
 // SPDX-FileCopyrightText: Simon Schneegans <code@simonschneegans.de>
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+// modified by Justin Garza <JGarza9788@gmail.com>
+
 'use strict';
 
 import Gio from 'gi://Gio';
