@@ -58,8 +58,8 @@ export default class Effect {
       shader._uScale         = shader.get_uniform_location('uScale');
       shader._uMovementSpeed = shader.get_uniform_location('uMovementSpeed');
 
-      shader._uRandomColor   = shader.get_uniform_location('uRandomColor');
-      shader._uSeed          = shader.get_uniform_location('uSeed');
+      shader._uRandomColor = shader.get_uniform_location('uRandomColor');
+      shader._uSeed        = shader.get_uniform_location('uSeed');
 
       // And update all uniforms at the start of each animation.
       shader.connect('begin-animation', (shader, settings) => {
